@@ -1,4 +1,5 @@
 # FHIR Store
+[![Build Status](https://travis-ci.org/bausmeier/fhir-store.svg?branch=master)](https://travis-ci.org/bausmeier/fhir-store)
 
 A MongoDB backed FHIR document store.
 

@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "7"
+services:
+  - mongodb
+before_script:
+  - mongo fhir-store-test --eval 'load("scripts/create-indexes.js");'
+cache:
+  yarn: true
