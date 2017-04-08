@@ -5,5 +5,7 @@ services:
   - mongodb
 before_script:
   - mongo fhir-store-test --eval 'load("scripts/create-indexes.js");'
+after_success:
+  - yarn run codecov
 cache:
   yarn: true
