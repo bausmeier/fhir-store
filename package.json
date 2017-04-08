@@ -1,0 +1,26 @@
+{
+  "name": "fhir-store",
+  "version": "1.0.0",
+  "author": "Brett Ausmeier <brett@ausmeier.co.za>",
+  "description": "A MongoDB backed FHIR document store.",
+  "license": "BSD-3-Clause",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bausmeier/fhir-store.git"
+  },
+  "scripts": {
+    "test": "tap -bJ \"test/**/*.js\"",
+    "lint": "standard"
+  },
+  "dependencies": {
+    "async": "^2.2.0",
+    "mongodb": "^2.2.25",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "sinon": "^2.1.0",
+    "standard": "^9.0.2",
+    "tap": "^10.3.1"
+  }
+}
