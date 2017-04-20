@@ -68,7 +68,7 @@ tap.test('update', (t) => {
       created: false,
       updated: true
     }
-    repo.updateResource.withArgs(expectedResourceMatcher, {}, sinon.match.func).yields(null, updatedResource, updateInfo)
+    repo.updateResource.withArgs(expectedResourceMatcher, null, sinon.match.func).yields(null, updatedResource, updateInfo)
 
     const resource = Object.assign({}, resourceToUpdate)
     store.update(resource, (err, returnedResource, returnedInfo) => {
