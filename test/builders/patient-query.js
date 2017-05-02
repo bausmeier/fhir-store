@@ -24,7 +24,7 @@ tap.test('Patient query builder', (t) => {
     }
     const query = buildPatientQuery({
       identifier: '123'
-    }, 'Patient')
+    })
     t.deepEqual(query, expectedQuery)
     t.end()
   })
@@ -41,7 +41,7 @@ tap.test('Patient query builder', (t) => {
     }
     const query = buildPatientQuery({
       identifier: 'http://acme.org/patient|123'
-    }, 'Patient')
+    })
     t.deepEqual(query, expectedQuery)
     t.end()
   })
@@ -68,7 +68,7 @@ tap.test('Patient query builder', (t) => {
     }
     const query = buildPatientQuery({
       identifier: ['123', '456']
-    }, 'Patient')
+    })
     t.deepEqual(query, expectedQuery)
     t.end()
   })
@@ -97,7 +97,7 @@ tap.test('Patient query builder', (t) => {
     }
     const query = buildPatientQuery({
       identifier: ['http://acme.org/patient|123', 'http://acme.org/patient2|456']
-    }, 'Patient')
+    })
     t.deepEqual(query, expectedQuery)
     t.end()
   })
