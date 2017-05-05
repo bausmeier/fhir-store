@@ -17,14 +17,15 @@ tap.test('Encounter query builder', (t) => {
   })
 
   t.test('should add a regex filter for the id subject parameter', (t) => {
-    const expectedFilters = {
-      resourceType: 'Encounter',
-      'subject.reference': new RegExp('(Patient)/123(/_history/[A-Za-z0-9-.]{1,64})?$')
-    }
     const filters = encounterQueryBuilder({
       subject: '123'
     })
-    t.deepEqual(filters, expectedFilters)
+    t.deepEqual(Object.keys(filters), ['resourceType', 'subject.reference'])
+    t.equal(filters.resourceType, 'Encounter')
+    t.ok(filters['subject.reference'].test('/Patient/123'))
+    t.ok(filters['subject.reference'].test('/Patient/123/_history/1'))
+    t.ok(filters['subject.reference'].test('http://localhost/Patient/123'))
+    t.ok(filters['subject.reference'].test('http://localhost/Patient/123/_history/1'))
     t.end()
   })
 
