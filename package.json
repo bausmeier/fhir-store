@@ -15,13 +15,13 @@
     "codecov": "tap --coverage-report=lcov && codecov"
   },
   "dependencies": {
-    "async": "^2.4.0",
-    "mongodb": "^2.2.26",
+    "async": "^2.4.1",
+    "mongodb": "^2.2.27",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
     "codecov": "^2.2.0",
-    "sinon": "^2.2.0",
+    "sinon": "^2.3.0",
     "standard": "^10.0.2",
     "tap": "^10.3.2"
   }
