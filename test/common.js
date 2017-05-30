@@ -72,3 +72,28 @@ exports.generateEncounter = () => {
     }
   }
 }
+
+exports.generateDiagnosticReport = () => {
+  return {
+    id: uuid(),
+    resourceType: 'DiagnosticReport',
+    meta: {
+      versionId: uuid(),
+      lastUpdated: new Date()
+    },
+    name: {
+      coding: [
+        {
+          system: 'http://loinc.org',
+          code: '58410-2',
+          display: 'Complete blood count'
+        }
+      ]
+    },
+    status: 'final',
+    issued: (new Date()).toJSON(),
+    subject: {
+      reference: `Patient/${uuid()}`
+    }
+  }
+}
