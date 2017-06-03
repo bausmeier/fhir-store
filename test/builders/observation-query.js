@@ -90,5 +90,38 @@ tap.test('Observation query builder', (t) => {
     t.end()
   })
 
+  t.test('should add a filter for the name query parameter when no system is provided', (t) => {
+    const expectedFilters = {
+      resourceType: 'Observation',
+      'name.coding': {
+        $elemMatch: {
+          code: '8480-6'
+        }
+      }
+    }
+    const filters = buildObservationQuery({
+      name: '8480-6'
+    })
+    t.deepEqual(filters, expectedFilters)
+    t.end()
+  })
+
+  t.test('should add a filter for the name query parameter when a system is provided', (t) => {
+    const expectedFilters = {
+      resourceType: 'Observation',
+      'name.coding': {
+        $elemMatch: {
+          system: 'http://loinc.org',
+          code: '8480-6'
+        }
+      }
+    }
+    const filters = buildObservationQuery({
+      name: 'http://loinc.org|8480-6'
+    })
+    t.deepEqual(filters, expectedFilters)
+    t.end()
+  })
+
   t.end()
 })
