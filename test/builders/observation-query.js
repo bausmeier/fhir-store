@@ -93,11 +93,15 @@ tap.test('Observation query builder', (t) => {
   t.test('should add a filter for the name query parameter when no system is provided', (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
-      'name.coding': {
-        $elemMatch: {
-          code: '8480-6'
+      $or: [
+        {
+          'name.coding': {
+            $elemMatch: {
+              code: '8480-6'
+            }
+          }
         }
-      }
+      ]
     }
     const filters = buildObservationQuery({
       name: '8480-6'
@@ -109,15 +113,75 @@ tap.test('Observation query builder', (t) => {
   t.test('should add a filter for the name query parameter when a system is provided', (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
-      'name.coding': {
-        $elemMatch: {
-          system: 'http://loinc.org',
-          code: '8480-6'
+      $or: [
+        {
+          'name.coding': {
+            $elemMatch: {
+              code: '8480-6',
+              system: 'http://loinc.org'
+            }
+          }
         }
-      }
+      ]
     }
     const filters = buildObservationQuery({
       name: 'http://loinc.org|8480-6'
+    })
+    t.deepEqual(filters, expectedFilters)
+    t.end()
+  })
+
+  t.test('should add a filter for the name query parameter when multiple codes are provided', (t) => {
+    const expectedFilters = {
+      resourceType: 'Observation',
+      $or: [
+        {
+          'name.coding': {
+            $elemMatch: {
+              code: '8480-6'
+            }
+          }
+        },
+        {
+          'name.coding': {
+            $elemMatch: {
+              code: '8462-4'
+            }
+          }
+        }
+      ]
+    }
+    const filters = buildObservationQuery({
+      name: '8480-6,8462-4'
+    })
+    t.deepEqual(filters, expectedFilters)
+    t.end()
+  })
+
+  t.test('should add a filter for the name query parameter when multiple codes and systems are provided', (t) => {
+    const expectedFilters = {
+      resourceType: 'Observation',
+      $or: [
+        {
+          'name.coding': {
+            $elemMatch: {
+              code: '8480-6',
+              system: 'http://loinc.org'
+            }
+          }
+        },
+        {
+          'name.coding': {
+            $elemMatch: {
+              code: '8462-4',
+              system: 'http://loinc.org'
+            }
+          }
+        }
+      ]
+    }
+    const filters = buildObservationQuery({
+      name: 'http://loinc.org|8480-6,http://loinc.org|8462-4'
     })
     t.deepEqual(filters, expectedFilters)
     t.end()
