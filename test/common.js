@@ -97,3 +97,33 @@ exports.generateDiagnosticReport = () => {
     }
   }
 }
+exports.generateObservation = () => {
+  return {
+    id: uuid(),
+    resourceType: 'Observation',
+    meta: {
+      versionId: uuid(),
+      lastUpdated: new Date()
+    },
+    name: {
+      coding: [
+        {
+          system: 'http://loinc.org',
+          code: '8480-6',
+          display: 'Systolic blood pressure'
+        },
+        {
+          system: 'http://snomed.info/sct',
+          code: '271649006',
+          display: 'Systolic blood pressure'
+        }
+      ]
+    },
+    valueQuantity: {
+      value: 107,
+      units: 'mm[Hg]'
+    },
+    status: 'final',
+    reliability: 'ok'
+  }
+}
