@@ -5,7 +5,8 @@ const tap = require('tap')
 const uuid = require('uuid/v1')
 
 const NAME_CODING_SYSTEM = 'urn:uuid:fb30ab87-e402-46e6-822b-fe3ee6242974'
-const NAME_CODE = '9102312731'
+const FIRST_NAME_CODE = '9102312731'
+const SECOND_NAME_CODE = '1165198455'
 
 tap.test('searchResources - Observation', common.testWithRepo((t, repo) => {
   repo._db.collection('resources').remove({resourceType: 'Observation'}, (err) => {
@@ -47,7 +48,7 @@ tap.test('searchResources - Observation', common.testWithRepo((t, repo) => {
           coding: [
             {
               system: NAME_CODING_SYSTEM,
-              code: NAME_CODE
+              code: FIRST_NAME_CODE
             }
           ]
         }
@@ -57,7 +58,21 @@ tap.test('searchResources - Observation', common.testWithRepo((t, repo) => {
           coding: [
             {
               system: `urn:uuid:${uuid()}`,
-              code: NAME_CODE
+              code: FIRST_NAME_CODE
+            },
+            {
+              system: NAME_CODING_SYSTEM,
+              code: SECOND_NAME_CODE
+            }
+          ]
+        }
+      }),
+      Object.assign(common.generateObservation(), {
+        name: {
+          coding: [
+            {
+              system: `urn:uuid:${uuid()}`,
+              code: SECOND_NAME_CODE
             }
           ]
         }
@@ -125,10 +140,10 @@ tap.test('searchResources - Observation', common.testWithRepo((t, repo) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Observation' &&
             resource.name.coding.some((coding) => {
-              return coding.code === NAME_CODE
+              return coding.code === FIRST_NAME_CODE
             })
         })
-        repo.searchResources('Observation', {name: NAME_CODE}, (err, returnedResources) => {
+        repo.searchResources('Observation', {name: FIRST_NAME_CODE}, (err, returnedResources) => {
           t.error(err)
           t.deepEqual(returnedResources, expectedResources)
           t.end()
@@ -139,10 +154,39 @@ tap.test('searchResources - Observation', common.testWithRepo((t, repo) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Observation' &&
             resource.name.coding.some((coding) => {
-              return coding.system === NAME_CODING_SYSTEM && coding.code === NAME_CODE
+              return coding.system === NAME_CODING_SYSTEM && coding.code === FIRST_NAME_CODE
             })
         })
-        repo.searchResources('Observation', {name: `${NAME_CODING_SYSTEM}|${NAME_CODE}`}, (err, returnedResources) => {
+        repo.searchResources('Observation', {name: `${NAME_CODING_SYSTEM}|${FIRST_NAME_CODE}`}, (err, returnedResources) => {
+          t.error(err)
+          t.deepEqual(returnedResources, expectedResources)
+          t.end()
+        })
+      })
+
+      t.test('should return the correct observations when searching by name with multiple codes', (t) => {
+        const expectedResources = existingResources.filter((resource) => {
+          return resource.resourceType === 'Observation' &&
+            resource.name.coding.some((coding) => {
+              return coding.code === FIRST_NAME_CODE || coding.code === SECOND_NAME_CODE
+            })
+        })
+        repo.searchResources('Observation', {name: `${FIRST_NAME_CODE},${SECOND_NAME_CODE}`}, (err, returnedResources) => {
+          t.error(err)
+          t.deepEqual(returnedResources, expectedResources)
+          t.end()
+        })
+      })
+
+      t.test('should return the correct observations when searching by name with multiple codes and systems', (t) => {
+        const expectedResources = existingResources.filter(resource => {
+          return resource.resourceType === 'Observation' &&
+            resource.name.coding.some(coding => {
+              return coding.system === NAME_CODING_SYSTEM &&
+                (coding.code === FIRST_NAME_CODE || coding.code === SECOND_NAME_CODE)
+            })
+        })
+        repo.searchResources('Observation', {name: `${NAME_CODING_SYSTEM}|${FIRST_NAME_CODE},${NAME_CODING_SYSTEM}|${SECOND_NAME_CODE}`}, (err, returnedResources) => {
           t.error(err)
           t.deepEqual(returnedResources, expectedResources)
           t.end()
