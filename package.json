@@ -1,6 +1,6 @@
 {
   "name": "fhir-store",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "author": "Brett Ausmeier <brett@ausmeier.co.za>",
   "description": "A MongoDB backed FHIR document store.",
   "license": "BSD-3-Clause",
