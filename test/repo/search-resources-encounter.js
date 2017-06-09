@@ -25,7 +25,7 @@ tap.test('searchResources - Encounter', common.testWithRepo((t, repo) => {
         }
       }),
       common.generatePatient()
-    ]
+    ].reverse()
 
     repo._db.collection('resources').insertMany(existingResources, (err) => {
       t.error(err)

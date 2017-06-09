@@ -10,7 +10,7 @@ tap.test('searchResources', common.testWithRepo((t, repo) => {
     const resourceType = 'Custom'
     const existingResources = new Array(12).fill(0).map(() => {
       return Object.assign(common.generatePatient(), {resourceType})
-    })
+    }).reverse()
 
     repo._db.collection('resources').insertMany(existingResources, (err) => {
       t.error(err)
@@ -51,6 +51,48 @@ tap.test('searchResources', common.testWithRepo((t, repo) => {
         repo.searchResources(resourceType, {_count: '3', page: '3'}, (err, returnedResources) => {
           t.error(err)
           t.deepEqual(returnedResources, existingResources.slice(6, 9))
+          t.end()
+        })
+      })
+
+      t.end()
+    })
+  })
+}))
+
+function generatePatientWithLastUpdated (lastUpdated) {
+  const patient = common.generatePatient()
+  patient.meta.lastUpdated = new Date(lastUpdated)
+  return patient
+}
+
+tap.test('searchResources - sort', common.testWithRepo((t, repo) => {
+  repo._db.collection('resources').remove({}, (err) => {
+    t.error(err)
+
+    const existingResources = [
+      generatePatientWithLastUpdated('2017-06-09T07:47:26.005Z'),
+      generatePatientWithLastUpdated('2017-06-07T07:47:26.005Z'),
+      generatePatientWithLastUpdated('2017-06-08T07:47:26.005Z')
+    ]
+
+    const expectedResources = existingResources.sort((first, second) => {
+      if (first.meta.lastUpdated < second.meta.lastUpdated) {
+        return 1
+      }
+      if (first.meta.lastUpdated > second.meta.lastUpdated) {
+        return -1
+      }
+      return 0
+    })
+
+    repo._db.collection('resources').insertMany(existingResources, (err) => {
+      t.error(err)
+
+      t.test('should return the results ordered by the last updated time', (t) => {
+        repo.searchResources('Patient', {}, (err, returnedResources) => {
+          t.error(err)
+          t.deepEqual(returnedResources, expectedResources)
           t.end()
         })
       })

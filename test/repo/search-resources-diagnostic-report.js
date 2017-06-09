@@ -40,7 +40,7 @@ tap.test('searchResources - DiagnosticReport', common.testWithRepo((t, repo) => 
         }
       }),
       common.generateCondition()
-    ]
+    ].reverse()
 
     repo._db.collection('resources').insertMany(existingResources, (err) => {
       t.error(err)
