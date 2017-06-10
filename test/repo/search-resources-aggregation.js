@@ -16,6 +16,12 @@ tap.test('searchResources with aggregation query', common.testWithRepo((t, repo)
 
     const expectedResources = existingResources.filter((resource) => {
       return resource.resourceType === 'Observation'
+    }).map((resource) => {
+      return {
+        id: resource.id,
+        resourceType: resource.resourceType,
+        meta: resource.meta
+      }
     })
 
     repo.setQueryBuilder('Observation', () => {
@@ -27,7 +33,10 @@ tap.test('searchResources with aggregation query', common.testWithRepo((t, repo)
         },
         {
           $project: {
-            _id: 0
+            _id: 0,
+            id: 1,
+            resourceType: 1,
+            meta: 1
           }
         }
       ]
