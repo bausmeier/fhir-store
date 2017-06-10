@@ -10,10 +10,13 @@ tap.test('searchResources', common.testWithRepo((t, repo) => {
     const resourceType = 'Custom'
     const existingResources = new Array(12).fill(0).map(() => {
       return Object.assign(common.generatePatient(), {resourceType})
-    }).reverse()
+    })
 
     repo._db.collection('resources').insertMany(existingResources, (err) => {
       t.error(err)
+
+      // Put the existing resources into expected order
+      existingResources.reverse()
 
       t.test('should return a maximum of 10 results by default', (t) => {
         repo.searchResources(resourceType, {}, (err, returnedResources) => {

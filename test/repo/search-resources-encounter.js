@@ -25,10 +25,13 @@ tap.test('searchResources - Encounter', common.testWithRepo((t, repo) => {
         }
       }),
       common.generatePatient()
-    ].reverse()
+    ]
 
     repo._db.collection('resources').insertMany(existingResources, (err) => {
       t.error(err)
+
+      // Put the existing resources into expected order
+      existingResources.reverse()
 
       t.test('should return all encounters when no query parameters are specified', (t) => {
         const expectedResources = existingResources.filter((resource) => {
