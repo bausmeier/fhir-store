@@ -16,13 +16,13 @@
   },
   "dependencies": {
     "async": "^2.4.1",
-    "mongodb": "^2.2.27",
+    "mongodb": "^2.2.28",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
     "codecov": "^2.2.0",
-    "sinon": "^2.3.0",
+    "sinon": "^2.3.4",
     "standard": "^10.0.2",
-    "tap": "^10.3.2"
+    "tap": "^10.3.3"
   }
 }
