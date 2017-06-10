@@ -100,4 +100,4 @@ Get the query builder used when searching for a particular resource type. This i
 
 Set the query builder to be used for a particular resource type. This is to support replacing or implementing special search behaviour.
 
-The query builder is a function which accepts the query object for a search and returns the filters to be used by the database when performing the search.
+The query builder is a function which accepts the query object for a search and returns the filters to be used by the database when performing the search. If the return value is an array it will be executed as an aggregation instead of a standard query.
