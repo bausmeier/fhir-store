@@ -53,5 +53,17 @@ tap.test('Encounter query builder', (t) => {
     t.end()
   })
 
+  t.test('should add a filter for the class', (t) => {
+    const expectedFilters = {
+      resourceType: 'Encounter',
+      class: 'ambulatory'
+    }
+    const filters = encounterQueryBuilder({
+      class: 'ambulatory'
+    })
+    t.deepEqual(filters, expectedFilters)
+    t.end()
+  })
+
   t.end()
 })

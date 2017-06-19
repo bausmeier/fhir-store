@@ -9,20 +9,32 @@ tap.test('searchResources - Encounter', common.testWithRepo((t, repo) => {
     t.error(err)
 
     const patientId = uuid()
+    const inpatient = 'inpatient'
+    const outpatient = 'outpatient'
     const existingResources = [
       common.generatePatient(),
       Object.assign(common.generateEncounter(), {
         subject: {
           reference: `Patient/${patientId}`
-        }
+        },
+        class: outpatient
       }),
       common.generatePatient(),
-      common.generateEncounter(),
+      Object.assign(common.generateEncounter(), {
+        class: inpatient
+      }),
       common.generatePatient(),
       Object.assign(common.generateEncounter(), {
         subject: {
           reference: `Patient/${patientId}`
-        }
+        },
+        class: inpatient
+      }),
+      Object.assign(common.generateEncounter(), {
+        subject: {
+          reference: `Patient/${patientId}`
+        },
+        class: outpatient
       }),
       common.generatePatient()
     ]
@@ -64,6 +76,36 @@ tap.test('searchResources - Encounter', common.testWithRepo((t, repo) => {
             resource.subject.reference === `Patient/${patientId}`
         })
         repo.searchResources('Encounter', {'subject:Patient': patientId}, (err, returnedResources) => {
+          t.error(err)
+          t.deepEqual(returnedResources, expectedResources)
+          t.end()
+        })
+      })
+
+      t.test('should return the correct encounters when searching by class', t => {
+        const expectedResources = existingResources.filter(resource => {
+          return resource.resourceType === 'Encounter' &&
+            resource.class &&
+            resource.class === inpatient
+        })
+        repo.searchResources('Encounter', {class: inpatient}, (err, returnedResources) => {
+          t.error(err)
+          t.deepEqual(returnedResources, expectedResources)
+          t.end()
+        })
+      })
+
+      t.test('should return the correct encounters when searching by subject id reference and class', t => {
+        const expectedResources = existingResources.filter(resource => {
+          return (
+            resource.resourceType === 'Encounter' &&
+            resource.subject &&
+            resource.subject.reference === `Patient/${patientId}` &&
+            resource.class &&
+            resource.class === outpatient
+          )
+        })
+        repo.searchResources('Encounter', {'subject:Patient': patientId, class: outpatient}, (err, returnedResources) => {
           t.error(err)
           t.deepEqual(returnedResources, expectedResources)
           t.end()
