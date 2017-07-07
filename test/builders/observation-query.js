@@ -93,13 +93,17 @@ tap.test('Observation query builder', (t) => {
   t.test('should add a filter for the name query parameter when no system is provided', (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
-      $or: [
+      $and: [
         {
-          'name.coding': {
-            $elemMatch: {
-              code: '8480-6'
+          $or: [
+            {
+              'name.coding': {
+                $elemMatch: {
+                  code: '8480-6'
+                }
+              }
             }
-          }
+          ]
         }
       ]
     }
@@ -113,14 +117,18 @@ tap.test('Observation query builder', (t) => {
   t.test('should add a filter for the name query parameter when a system is provided', (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
-      $or: [
+      $and: [
         {
-          'name.coding': {
-            $elemMatch: {
-              code: '8480-6',
-              system: 'http://loinc.org'
+          $or: [
+            {
+              'name.coding': {
+                $elemMatch: {
+                  code: '8480-6',
+                  system: 'http://loinc.org'
+                }
+              }
             }
-          }
+          ]
         }
       ]
     }
@@ -134,20 +142,24 @@ tap.test('Observation query builder', (t) => {
   t.test('should add a filter for the name query parameter when multiple codes are provided', (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
-      $or: [
+      $and: [
         {
-          'name.coding': {
-            $elemMatch: {
-              code: '8480-6'
+          $or: [
+            {
+              'name.coding': {
+                $elemMatch: {
+                  code: '8480-6'
+                }
+              }
+            },
+            {
+              'name.coding': {
+                $elemMatch: {
+                  code: '8462-4'
+                }
+              }
             }
-          }
-        },
-        {
-          'name.coding': {
-            $elemMatch: {
-              code: '8462-4'
-            }
-          }
+          ]
         }
       ]
     }
@@ -161,22 +173,26 @@ tap.test('Observation query builder', (t) => {
   t.test('should add a filter for the name query parameter when multiple codes and systems are provided', (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
-      $or: [
+      $and: [
         {
-          'name.coding': {
-            $elemMatch: {
-              code: '8480-6',
-              system: 'http://loinc.org'
+          $or: [
+            {
+              'name.coding': {
+                $elemMatch: {
+                  code: '8480-6',
+                  system: 'http://loinc.org'
+                }
+              }
+            },
+            {
+              'name.coding': {
+                $elemMatch: {
+                  code: '8462-4',
+                  system: 'http://loinc.org'
+                }
+              }
             }
-          }
-        },
-        {
-          'name.coding': {
-            $elemMatch: {
-              code: '8462-4',
-              system: 'http://loinc.org'
-            }
-          }
+          ]
         }
       ]
     }
