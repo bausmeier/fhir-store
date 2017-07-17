@@ -138,3 +138,14 @@ exports.generatePractitioner = () => {
     }
   }
 }
+
+exports.generateOrganization = () => {
+  return {
+    id: uuid(),
+    resourceType: 'Organization',
+    meta: {
+      versionId: uuid(),
+      lastUpdated: new Date()
+    }
+  }
+}
