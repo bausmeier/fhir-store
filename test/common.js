@@ -127,3 +127,14 @@ exports.generateObservation = () => {
     reliability: 'ok'
   }
 }
+
+exports.generatePractitioner = () => {
+  return {
+    id: uuid(),
+    resourceType: 'Practitioner',
+    meta: {
+      versionId: uuid(),
+      lastUpdated: new Date()
+    }
+  }
+}
