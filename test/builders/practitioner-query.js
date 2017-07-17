@@ -46,5 +46,38 @@ tap.test('Practitioner query builder', (t) => {
     t.end()
   })
 
+  t.test('should add multiple filters for identifier when multiple identifier values are specified', (t) => {
+    const expectedQuery = {
+      resourceType: 'Practitioner',
+      $and: [
+        {
+          $or: [
+            {
+              identifier: {
+                $elemMatch: {
+                  system: 'http://example.com',
+                  value: '123'
+                }
+              }
+            },
+            {
+              identifier: {
+                $elemMatch: {
+                  system: 'http://hl7.org/fhir',
+                  value: '456'
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+    const query = buildPractitionerQuery({
+      identifier: 'http://example.com|123,http://hl7.org/fhir|456'
+    })
+    t.deepEqual(query, expectedQuery)
+    t.end()
+  })
+
   t.end()
 })
