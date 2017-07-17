@@ -127,3 +127,14 @@ exports.generateObservation = () => {
     reliability: 'ok'
   }
 }
+
+exports.generateOrganization = () => {
+  return {
+    id: uuid(),
+    resourceType: 'Organization',
+    meta: {
+      versionId: uuid(),
+      lastUpdated: new Date()
+    }
+  }
+}
