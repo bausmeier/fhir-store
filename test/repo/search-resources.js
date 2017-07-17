@@ -104,3 +104,57 @@ tap.test('searchResources - sort', common.testWithRepo((t, repo) => {
     })
   })
 }))
+
+tap.test('searchResources by id', common.testWithRepo((t, repo) => {
+  t.beforeEach((next) => {
+    repo._db.collection('resources').remove({}, next)
+  })
+
+  t.test('should return the correct resources for the _id parameter', (t) => {
+    const expectedPatient = common.generatePatient()
+    const expectedResources = [
+      expectedPatient
+    ]
+    const existingResources = [
+      common.generatePatient(),
+      expectedPatient,
+      common.generatePatient()
+    ]
+
+    repo._db.collection('resources').insertMany(existingResources, (err) => {
+      t.error(err)
+
+      repo.searchResources('Patient', {_id: expectedPatient.id}, (err, returnedResources) => {
+        t.error(err)
+        t.deepEqual(returnedResources, expectedResources)
+        t.end()
+      })
+    })
+  })
+
+  t.test('should return the correct resources for the _id parameter when there are multiple values', (t) => {
+    const firstExpectedPatient = common.generatePatient()
+    const secondExpectedPatient = common.generatePatient()
+    const expectedResources = [
+      secondExpectedPatient,
+      firstExpectedPatient
+    ]
+    const existingResources = [
+      firstExpectedPatient,
+      common.generatePatient(),
+      secondExpectedPatient
+    ]
+
+    repo._db.collection('resources').insertMany(existingResources, (err) => {
+      t.error(err)
+
+      repo.searchResources('Patient', {_id: `${firstExpectedPatient.id},${secondExpectedPatient.id}`}, (err, returnedResources) => {
+        t.error(err)
+        t.deepEqual(returnedResources, expectedResources)
+        t.end()
+      })
+    })
+  })
+
+  t.end()
+}))
