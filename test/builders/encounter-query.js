@@ -68,16 +68,20 @@ tap.test('Encounter query builder', (t) => {
   t.test('should add an $or filter for multiple classes', (t) => {
     const expectedFilters = {
       resourceType: 'Encounter',
-      $or: [
+      $and: [
         {
-          class: 'ambulatory'
-        },
-        {
-          class: 'outpatient'
+          $or: [
+            {
+              class: 'ambulatory'
+            },
+            {
+              class: 'outpatient'
+            }
+          ]
         }
+
       ]
     }
-
     const filters = encounterQueryBuilder({
       class: 'ambulatory,outpatient'
     })
