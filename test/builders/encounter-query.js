@@ -65,5 +65,25 @@ tap.test('Encounter query builder', (t) => {
     t.end()
   })
 
+  t.test('should add an $or filter for multiple classes', (t) => {
+    const expectedFilters = {
+      resourceType: 'Encounter',
+      $or: [
+        {
+          class: 'ambulatory'
+        },
+        {
+          class: 'outpatient'
+        }
+      ]
+    }
+
+    const filters = encounterQueryBuilder({
+      class: 'ambulatory,outpatient'
+    })
+    t.deepEqual(filters, expectedFilters)
+    t.end()
+  })
+
   t.end()
 })

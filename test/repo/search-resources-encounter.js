@@ -95,6 +95,20 @@ tap.test('searchResources - Encounter', common.testWithRepo((t, repo) => {
         })
       })
 
+      t.test('should return the correct encounters when searching by two classes', t => {
+        const expectedResources = existingResources.filter(resource => {
+          return resource.resourceType === 'Encounter' &&
+            resource.class &&
+            (resource.class === inpatient || resource.class === outpatient)
+        })
+
+        repo.searchResources('Encounter', {class: `${inpatient},${outpatient}`}, (err, returnedResources) => {
+          t.error(err)
+          t.deepEqual(returnedResources, expectedResources)
+          t.end()
+        })
+      })
+
       t.test('should return the correct encounters when searching by subject id reference and class', t => {
         const expectedResources = existingResources.filter(resource => {
           return (
