@@ -149,3 +149,33 @@ exports.generateOrganization = () => {
     }
   }
 }
+
+exports.generateDevice = () => {
+  return {
+    id: uuid(),
+    resourceType: 'Device',
+    meta: {
+      versionId: uuid(),
+      lastUpdated: new Date()
+    },
+    type: {
+      coding: [
+        {
+          text: 'ECG'
+        }
+      ]
+    }
+  }
+}
+
+exports.generateCarePlan = () => {
+  return {
+    id: uuid(),
+    resourceType: 'CarePlan',
+    meta: {
+      versionId: uuid(),
+      lastUpdated: new Date()
+    },
+    status: 'planned'
+  }
+}
