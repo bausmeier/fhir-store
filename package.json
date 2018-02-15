@@ -20,9 +20,9 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
-    "codecov": "^2.3.0",
-    "sinon": "^3.2.0",
+    "codecov": "^3.0.0",
+    "sinon": "^4.3.0",
     "standard": "^10.0.3",
-    "tap": "^10.7.2"
+    "tap": "^11.1.0"
   }
 }
