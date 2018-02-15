@@ -16,14 +16,6 @@ Options:
 
 The callback receives an error and an initialised Store instance.
 
-## Exported values
-
-- `OperationOutcomeError` - The base class for errors which adds the `toOperationOutcome()` function.
-- `ConflictError` - Indicates a conflict when trying to update a resource.
-- `DeletedError` - Indicates that the requested resource has been deleted when trying to read it.
-- `NotFoundError` - Indicates that the requested resource could not be found.
-- `ValidationError` - Indicates that a resource is invalid.
-
 # Store
 
 This is the class which is used to perform FHIR interactions.
