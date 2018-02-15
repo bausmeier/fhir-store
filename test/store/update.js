@@ -3,7 +3,7 @@
 const common = require('../common')
 const Repo = require('../../lib/repo')
 const Store = require('../../lib/store')
-const ValidationError = require('../../lib/errors/validation')
+const {ValidationError} = require('fhir-errors')
 const sinon = require('sinon')
 const tap = require('tap')
 

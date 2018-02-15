@@ -2,7 +2,7 @@
 
 const Repo = require('../../lib/repo')
 const Store = require('../../lib/store')
-const ValidationError = require('../../lib/errors/validation')
+const {ValidationError} = require('fhir-errors')
 const bundleCreator = require('../../lib/bundle')
 const common = require('../common')
 const sinon = require('sinon')

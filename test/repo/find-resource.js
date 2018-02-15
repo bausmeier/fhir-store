@@ -1,7 +1,6 @@
 'use strict'
 
-const DeletedError = require('../../lib/errors/deleted')
-const NotFoundError = require('../../lib/errors/not-found')
+const {DeletedError, NotFoundError} = require('fhir-errors')
 const common = require('../common')
 const tap = require('tap')
 const uuid = require('uuid/v1')

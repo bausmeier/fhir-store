@@ -1,6 +1,6 @@
 'use strict'
 
-const NotFoundError = require('../../lib/errors/not-found')
+const {NotFoundError} = require('fhir-errors')
 const common = require('../common')
 const tap = require('tap')
 

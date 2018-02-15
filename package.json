@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "async": "^2.5.0",
+    "fhir-errors": "^1.0.0",
     "mongodb": "^2.2.31",
     "uuid": "^3.1.0"
   },

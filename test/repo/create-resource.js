@@ -1,6 +1,6 @@
 'use strict'
 
-const ConflictError = require('../../lib/errors/conflict')
+const {ConflictError} = require('fhir-errors')
 const common = require('../common')
 const tap = require('tap')
 
