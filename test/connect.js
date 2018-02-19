@@ -7,10 +7,26 @@ const tap = require('tap')
 const {MongoClient, ReadPreference} = require('mongodb')
 
 const REQUIRED_OPTIONS = {
-  db: 'mongodb://localhost/fhir-store-test'
+  db: {
+    url: 'mongodb://localhost',
+    name: 'fhir-store-test'
+  }
 }
 
 tap.test('Connect', (t) => {
+  t.test('should pass through db url and name', (t) => {
+    const options = Object.assign({}, REQUIRED_OPTIONS)
+    FHIRStore.connect(options, (err, store) => {
+      t.error(err)
+      t.type(store, Store)
+      t.equal(store._base, 'http://localhost/')
+      t.end()
+
+      // Close the store so that the test doesn't hang
+      store.close()
+    })
+  })
+
   t.test('should have a default base url', (t) => {
     const options = Object.assign({}, REQUIRED_OPTIONS)
     FHIRStore.connect(options, (err, store) => {

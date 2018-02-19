@@ -3,12 +3,15 @@
 const Repo = require('../../../lib/repo')
 const patientQueryBuilder = require('../../../lib/builders/patient-query')
 const tap = require('tap')
-const {Db} = require('mongodb')
+const {Db, MongoClient} = require('mongodb')
+const sinon = require('sinon')
 
 tap.test('getQueryBuilder', (t) => {
-  const db = Object.create(Db.prototype)
+  const client = sinon.createStubInstance(MongoClient)
+  const db = sinon.createStubInstance(Db)
+  client.db.returns(db)
 
-  const repo = new Repo(db)
+  const repo = new Repo(client, 'fhir-store-test')
 
   t.test('should return the correct query builder', (t) => {
     const queryBuilder = repo.getQueryBuilder('Patient')
@@ -20,10 +23,12 @@ tap.test('getQueryBuilder', (t) => {
 })
 
 tap.test('setQueryBuilder', (t) => {
-  const db = Object.create(Db.prototype)
+  const client = sinon.createStubInstance(MongoClient)
+  const db = sinon.createStubInstance(Db)
+  client.db.returns(db)
 
   t.test('should add new query builders', (t) => {
-    const repo = new Repo(db)
+    const repo = new Repo(client, 'fhir-store-test')
     function customQueryBuilder () {}
     repo.setQueryBuilder('Custom', customQueryBuilder)
     t.equal(repo._builders.Custom, customQueryBuilder)
@@ -31,7 +36,7 @@ tap.test('setQueryBuilder', (t) => {
   })
 
   t.test('should replace existing query builders', (t) => {
-    const repo = new Repo(db)
+    const repo = new Repo(client, 'fhir-store-test')
     function customPatientQueryBuilder () {}
     repo.setQueryBuilder('Patient', customPatientQueryBuilder)
     t.equal(repo._builders.Patient, customPatientQueryBuilder)

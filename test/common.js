@@ -16,10 +16,10 @@ const mongoOptions = {
 
 exports.testWithRepo = (runTest) => {
   return function (t) {
-    MongoClient.connect('mongodb://localhost/fhir-store-test', mongoOptions, (err, db) => {
+    MongoClient.connect('mongodb://localhost', mongoOptions, (err, client) => {
       t.error(err)
 
-      const repo = new Repo(db)
+      const repo = new Repo(client, 'fhir-store-test')
       t.tearDown(() => {
         repo.close()
       })

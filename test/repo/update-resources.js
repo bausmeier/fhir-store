@@ -26,9 +26,9 @@ tap.test('updateResources', common.testWithRepo((t, repo) => {
       t.deepEqual(returnedResources, resources)
 
       const query = buildResourcesQuery(resources)
-      repo._db.collection('resources').find(query, {_id: 0}).sort({_id: 1}).toArray((err, updatedResources) => {
+      repo._db.collection('resources').find(query, {projection: {_id: 0}}).sort({_id: 1}).toArray((err, updatedResources) => {
         t.error(err)
-        t.deepEqual(updatedResources, resources)
+        t.deepEqual(resources, updatedResources)
         t.end()
       })
     })
@@ -51,9 +51,9 @@ tap.test('updateResources', common.testWithRepo((t, repo) => {
         t.deepEqual(returnedResources, resources)
 
         const query = buildResourcesQuery(resources)
-        repo._db.collection('resources').find(query, {_id: 0}).sort({_id: 1}).toArray((err, updatedResources) => {
+        repo._db.collection('resources').find(query, {projection: {_id: 0}}).sort({_id: 1}).toArray((err, updatedResources) => {
           t.error(err)
-          t.deepEqual(updatedResources, resources)
+          t.deepEqual(resources, updatedResources)
           t.end()
         })
       })
@@ -70,9 +70,9 @@ tap.test('updateResources', common.testWithRepo((t, repo) => {
       t.deepEqual(returnedResources, resources)
 
       const query = buildResourcesQuery(resources)
-      repo._db.collection('versions').find(query, {_id: 0}).sort({_id: 1}).toArray((err, updatedResources) => {
+      repo._db.collection('versions').find(query, {projection: {_id: 0}}).sort({_id: 1}).toArray((err, updatedResources) => {
         t.error(err)
-        t.deepEqual(updatedResources, resources)
+        t.deepEqual(resources, updatedResources)
         t.end()
       })
     })

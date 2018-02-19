@@ -10,7 +10,9 @@ Initialises and returns an instance of Store.
 
 Options:
 
- - `db` (required) - The database URL.
+ - `db` (required) - The database connection options.
+ - `db.url` - The database url to connect to.
+ - `db.name` - The name of the database to use.
  - `dbOptions` - Options to pass to the database driver.
  - `base` - The FHIR base URL. Defaults to `http://localhost/`
 
