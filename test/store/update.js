@@ -29,7 +29,7 @@ tap.test('update', (t) => {
   })
 
   t.beforeEach((next) => {
-    repo.createResource.yields(new Error('Not stubbed'))
+    repo.createResource.rejects(new Error('Not stubbed'))
     repo.updateResource.yields(new Error('Not stubbed'))
     next()
   })
@@ -80,7 +80,7 @@ tap.test('update', (t) => {
   })
 
   t.test('should call createResource and return the result when the ifNoneMatch option is *', (t) => {
-    repo.createResource.withArgs(expectedResourceMatcher, sinon.match.func).yields(null, updatedResource)
+    repo.createResource.withArgs(expectedResourceMatcher).resolves({resource: updatedResource})
 
     const resource = Object.assign({}, resourceToUpdate)
     store.update(resource, {ifNoneMatch: '*'}, (err, returnedResource) => {
