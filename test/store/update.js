@@ -30,7 +30,7 @@ tap.test('update', (t) => {
 
   t.beforeEach((next) => {
     repo.createResource.rejects(new Error('Not stubbed'))
-    repo.updateResource.yields(new Error('Not stubbed'))
+    repo.updateResource.rejects(new Error('Not stubbed'))
     next()
   })
 
@@ -68,7 +68,7 @@ tap.test('update', (t) => {
       created: false,
       updated: true
     }
-    repo.updateResource.withArgs(expectedResourceMatcher, null, sinon.match.func).yields(null, updatedResource, updateInfo)
+    repo.updateResource.withArgs(expectedResourceMatcher, null).resolves({resource: updatedResource, info: updateInfo})
 
     const resource = Object.assign({}, resourceToUpdate)
     store.update(resource, (err, returnedResource, returnedInfo) => {
@@ -92,7 +92,7 @@ tap.test('update', (t) => {
 
   t.test('should call updateResource and pass through the options when they are provided', (t) => {
     const options = {ifMatch: '*'}
-    repo.updateResource.withArgs(expectedResourceMatcher, sinon.match(options), sinon.match.func).yields(null, updatedResource)
+    repo.updateResource.withArgs(expectedResourceMatcher, sinon.match(options)).resolves({resource: updatedResource})
 
     const resource = Object.assign({}, resourceToUpdate)
     store.update(resource, options, (err, returnedResource) => {

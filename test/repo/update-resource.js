@@ -6,113 +6,93 @@ const tap = require('tap')
 const uuid = require('uuid/v1')
 
 tap.test('updateResource', common.testWithRepo((t, repo) => {
-  t.test('should create the resource if it does not exist', (t) => {
+  t.test('should create the resource if it does not exist', async (t) => {
     const resource = common.generatePatient()
-    repo.updateResource(resource, (err, returnedResource, updateInfo) => {
-      t.error(err)
-      t.deepEqual(returnedResource, resource)
-      t.deepEqual(updateInfo, {
-        created: true,
-        updated: false
-      })
-
-      const query = {
-        resourceType: resource.resourceType,
-        id: resource.id
-      }
-      repo._db.collection('resources').findOne(query, (err, updatedResource) => {
-        t.error(err)
-        t.match(updatedResource, resource)
-        t.end()
-      })
+    const {resource: returnedResource, info: updateInfo} = await repo.updateResource(resource)
+    t.deepEqual(returnedResource, resource)
+    t.deepEqual(updateInfo, {
+      created: true,
+      updated: false
     })
+
+    const query = {
+      resourceType: resource.resourceType,
+      id: resource.id
+    }
+    const updatedResource = await repo._db.collection('resources').findOne(query)
+    t.match(updatedResource, resource)
   })
 
-  t.test('should update the resource if it exists', (t) => {
+  t.test('should update the resource if it exists', async (t) => {
     const existingResource = common.generatePatient()
     const resource = Object.assign(common.generatePatient(), {id: existingResource.id})
-    repo._db.collection('resources').insertOne(existingResource, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertOne(existingResource)
 
-      repo.updateResource(resource, (err, returnedResource, updateInfo) => {
-        t.error(err)
-        t.deepEqual(returnedResource, resource)
-        t.deepEqual(updateInfo, {
-          created: false,
-          updated: true
-        })
-
-        const query = {
-          resourceType: resource.resourceType,
-          id: resource.id
-        }
-        repo._db.collection('resources').findOne(query, (err, updatedResource) => {
-          t.error(err)
-          t.match(updatedResource, resource)
-          t.end()
-        })
-      })
+    const {resource: returnedResource, info: updateInfo} = await repo.updateResource(resource)
+    t.deepEqual(returnedResource, resource)
+    t.deepEqual(updateInfo, {
+      created: false,
+      updated: true
     })
+
+    const query = {
+      resourceType: resource.resourceType,
+      id: resource.id
+    }
+    const updatedResource = await repo._db.collection('resources').findOne(query)
+    t.match(updatedResource, resource)
   })
 
-  t.test('should insert the updated resource into the \'versions\' collection', (t) => {
+  t.test('should insert the updated resource into the \'versions\' collection', async (t) => {
     const resource = common.generatePatient()
-    repo.updateResource(resource, (err, returnedResource) => {
-      t.error(err)
-      t.deepEqual(returnedResource, resource)
+    const {resource: returnedResource} = await repo.updateResource(resource)
+    t.deepEqual(returnedResource, resource)
 
-      const query = {
-        resourceType: resource.resourceType,
-        id: resource.id,
-        'meta.versionId': resource.meta.versionId
-      }
-      repo._db.collection('versions').findOne(query, (err, updatedResource) => {
-        t.error(err)
-        t.match(updatedResource, resource)
-        t.end()
-      })
-    })
+    const query = {
+      resourceType: resource.resourceType,
+      id: resource.id,
+      'meta.versionId': resource.meta.versionId
+    }
+    const updatedResource = await repo._db.collection('versions').findOne(query)
+    t.match(updatedResource, resource)
   })
 
-  t.test('should not create the resource if the ifMatch option is *', (t) => {
+  t.test('should not create the resource if the ifMatch option is *', async (t) => {
     const resource = common.generatePatient()
-    repo.updateResource(resource, {ifMatch: '*'}, (err, returnedResource) => {
+    try {
+      await repo.updateResource(resource, {ifMatch: '*'})
+      t.fail('updateResource should throw')
+    } catch (err) {
       t.type(err, ConflictError)
       t.equal(err.message, `Patient with id ${resource.id} does not match`)
-      t.end()
-    })
+    }
   })
 
-  t.test('should update the resource if the ifMatch option matches the version id', (t) => {
+  t.test('should update the resource if the ifMatch option matches the version id', async (t) => {
     const existingResource = common.generatePatient()
-    repo._db.collection('resources').insertOne(existingResource, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertOne(existingResource)
 
-      const resource = Object.assign(common.generatePatient(), {id: existingResource.id})
-      repo.updateResource(resource, {ifMatch: existingResource.meta.versionId}, (err, returnedResource) => {
-        t.error(err)
-        t.deepEqual(returnedResource, resource)
+    const resource = Object.assign(common.generatePatient(), {id: existingResource.id})
+    const {resource: returnedResource} = await repo.updateResource(resource, {ifMatch: existingResource.meta.versionId})
+    t.deepEqual(returnedResource, resource)
 
-        const query = {
-          resourceType: resource.resourceType,
-          id: resource.id
-        }
-        repo._db.collection('resources').findOne(query, (err, updatedResource) => {
-          t.error(err)
-          t.match(updatedResource, resource)
-          t.end()
-        })
-      })
-    })
+    const query = {
+      resourceType: resource.resourceType,
+      id: resource.id
+    }
+    const updatedResource = await repo._db.collection('resources').findOne(query)
+    t.match(updatedResource, resource)
   })
 
-  t.test('should return a conflict error if the ifMatch option does not match the version id', (t) => {
+  t.test('should return a conflict error if the ifMatch option does not match the version id', async (t) => {
     const resource = common.generatePatient()
-    repo.updateResource(resource, {ifMatch: uuid()}, (err, returnedResource) => {
+    try {
+      await repo.updateResource(resource, {ifMatch: uuid()})
+      t.fail('updateResource should throw')
+    } catch (err) {
       t.type(err, ConflictError)
       t.equal(err.message, `Patient with id ${resource.id} does not match`)
-      t.end()
-    })
+    }
   })
 
   t.end()
