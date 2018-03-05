@@ -42,8 +42,8 @@ tap.test('Transaction', (t) => {
   })
 
   t.beforeEach((next) => {
-    repo.updateResources.yields(new Error('Not stubbed'))
-    sinon.stub(bundleCreator, 'createBundle').throws(new Error('Not stubbed'))
+    repo.updateResources.rejects(new Error('Not stubbed'))
+    sinon.stub(bundleCreator, 'createBundle').rejects(new Error('Not stubbed'))
     next()
   })
 
@@ -138,7 +138,7 @@ tap.test('Transaction', (t) => {
       ]
     }
 
-    repo.updateResources.yields(new Error('boom'))
+    repo.updateResources.rejects(new Error('boom'))
 
     store.transaction(transaction, (err) => {
       t.type(err, Error)
@@ -177,10 +177,7 @@ tap.test('Transaction', (t) => {
       })
     }
 
-    repo.updateResources.withArgs(resources.map(sinon.match), sinon.match.func).callsFake((resources, callback) => {
-      // Just return the resources for simplicity
-      callback(null, resources)
-    })
+    repo.updateResources.withArgs(resources.map(sinon.match)).resolves(resources)
 
     const expectedBundle = generateBundle(resources)
 
