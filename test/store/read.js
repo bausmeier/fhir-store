@@ -15,7 +15,7 @@ tap.test('read', (t) => {
   })
 
   t.beforeEach((next) => {
-    repo.findResource.yields(new Error('Not stubbed'))
+    repo.findResource.rejects(new Error('Not stubbed'))
     next()
   })
 
@@ -28,7 +28,7 @@ tap.test('read', (t) => {
 
   t.test('should call findResource and return the result', (t) => {
     const resource = common.generatePatient()
-    repo.findResource.withArgs('Patient', '1', sinon.match.func).yields(null, resource)
+    repo.findResource.withArgs('Patient', '1').resolves(resource)
 
     store.read('Patient', '1', (err, result) => {
       t.error(err)
@@ -38,7 +38,7 @@ tap.test('read', (t) => {
   })
 
   t.test('should handle errors from findResource', (t) => {
-    repo.findResource.yields(new Error('Oops'))
+    repo.findResource.rejects(new Error('Oops'))
 
     store.read('Patient', '1', (err, result) => {
       t.type(err, Error)
