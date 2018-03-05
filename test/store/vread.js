@@ -15,7 +15,7 @@ tap.test('vread', (t) => {
   })
 
   t.beforeEach((next) => {
-    repo.findResourceVersion.yields(new Error('Not stubbed'))
+    repo.findResourceVersion.rejects(new Error('Not stubbed'))
     next()
   })
 
@@ -28,7 +28,7 @@ tap.test('vread', (t) => {
 
   t.test('should call findResourceVersion and return the result', (t) => {
     const resource = common.generatePatient()
-    repo.findResourceVersion.withArgs('Patient', '1', '9', sinon.match.func).yields(null, resource)
+    repo.findResourceVersion.withArgs('Patient', '1', '9').resolves(resource)
 
     store.vread('Patient', '1', '9', (err, result) => {
       t.error(err)
@@ -38,7 +38,7 @@ tap.test('vread', (t) => {
   })
 
   t.test('should handle errors from findResourceVersion', (t) => {
-    repo.findResourceVersion.yields(new Error('Oops'))
+    repo.findResourceVersion.rejects(new Error('Oops'))
 
     store.vread('Patient', '1', '9', (err, result) => {
       t.type(err, Error)
