@@ -8,17 +8,15 @@ if (require.main === module) {
 
 const Repo = require('../lib/repo')
 const uuid = require('uuid/v1')
-const {MongoClient} = require('mongodb')
-
-const mongoOptions = {
-  forceServerObjectId: true
-}
 
 exports.testWithRepo = (runTest) => {
   return async function (t) {
-    const client = await MongoClient.connect('mongodb://localhost', mongoOptions)
+    const repo = new Repo({
+      url: 'mongodb://localhost',
+      name: 'fhir-store-test'
+    })
 
-    const repo = new Repo(client, 'fhir-store-test')
+    await repo.initialise()
 
     t.tearDown(() => {
       repo.close()

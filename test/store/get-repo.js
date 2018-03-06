@@ -2,10 +2,12 @@
 
 const Repo = require('../../lib/repo')
 const Store = require('../../lib/store')
+const sinon = require('sinon')
 const tap = require('tap')
 
 tap.test('getRepo', async (t) => {
-  const repo = Object.create(Repo.prototype)
+  const repo = sinon.createStubInstance(Repo)
+  repo.isInitialised.returns(true)
 
   const store = new Store({
     base: 'http://localhost/',

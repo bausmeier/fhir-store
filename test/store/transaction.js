@@ -35,6 +35,7 @@ function generateBundle (resources = []) {
 
 tap.test('Transaction', async (t) => {
   const repo = sinon.createStubInstance(Repo)
+  repo.isInitialised.returns(true)
 
   const store = new Store({
     base: 'http://localhost/',

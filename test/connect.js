@@ -6,16 +6,14 @@ const sinon = require('sinon')
 const tap = require('tap')
 const {MongoClient, ReadPreference} = require('mongodb')
 
-const REQUIRED_OPTIONS = {
-  db: {
-    url: 'mongodb://localhost',
-    name: 'fhir-store-test'
-  }
+const REQUIRED_DB_OPTIONS = {
+  url: 'mongodb://localhost',
+  name: 'fhir-store-test'
 }
 
 tap.test('Connect', async (t) => {
   t.test('should pass through db url and name', async (t) => {
-    const options = Object.assign({}, REQUIRED_OPTIONS)
+    const options = {db: REQUIRED_DB_OPTIONS}
     const store = await FHIRStore.connect(options)
     t.type(store, Store)
     t.equal(store._base, 'http://localhost/')
@@ -25,7 +23,7 @@ tap.test('Connect', async (t) => {
   })
 
   t.test('should have a default base url', async (t) => {
-    const options = Object.assign({}, REQUIRED_OPTIONS)
+    const options = {db: REQUIRED_DB_OPTIONS}
     const store = await FHIRStore.connect(options)
     t.type(store, Store)
     t.equal(store._base, 'http://localhost/')
@@ -35,9 +33,7 @@ tap.test('Connect', async (t) => {
   })
 
   t.test('should accept a base url option', async (t) => {
-    const options = Object.assign({}, REQUIRED_OPTIONS, {
-      base: 'https://example.com/fhir/'
-    })
+    const options = {base: 'https://example.com/fhir/', db: REQUIRED_DB_OPTIONS}
     const store = await FHIRStore.connect(options)
     t.type(store, Store)
     t.equal(store._base, 'https://example.com/fhir/')
@@ -46,7 +42,7 @@ tap.test('Connect', async (t) => {
     await store.close()
   })
 
-  t.test('should pass dbOptions through to the database driver', async (t) => {
+  t.test('should pass db.options through to the database driver', async (t) => {
     sinon.spy(MongoClient, 'connect')
 
     const dbOptions = {
@@ -58,7 +54,7 @@ tap.test('Connect', async (t) => {
       readPreference: ReadPreference.PRIMARY_PREFERRED
     }
 
-    const options = Object.assign({}, REQUIRED_OPTIONS, {dbOptions})
+    const options = {db: Object.assign({}, REQUIRED_DB_OPTIONS, {options: dbOptions})}
     const store = await FHIRStore.connect(options)
     t.equal(MongoClient.connect.callCount, 1)
     t.match(MongoClient.connect.firstCall.args[1], dbOptions)

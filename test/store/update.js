@@ -22,6 +22,7 @@ const updatedResource = Object.assign({}, resourceToUpdate)
 
 tap.test('update', async (t) => {
   const repo = sinon.createStubInstance(Repo)
+  repo.isInitialised.returns(true)
 
   const store = new Store({
     base: 'http://localhost/',
