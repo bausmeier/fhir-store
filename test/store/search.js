@@ -37,10 +37,9 @@ tap.test('Search', (t) => {
 
   const store = new Store({base: 'http://localhost/', repo})
 
-  t.beforeEach((next) => {
+  t.beforeEach(async () => {
     repo.searchResources.rejects(new Error('Not stubbed'))
     sinon.stub(bundleCreator, 'createBundle').throws(new Error('Not stubbed'))
-    next()
   })
 
   t.afterEach((next) => {
@@ -51,21 +50,18 @@ tap.test('Search', (t) => {
     })
   })
 
-  t.test('should correctly construct bundle', (t) => {
+  t.test('should correctly construct bundle', async (t) => {
     repo.searchResources.withArgs('Patient', sinon.match({})).resolves({resources: [], count: 0})
 
     const expectedBundle = generateBundle()
 
     bundleCreator.createBundle.withArgs('http://localhost/', 'Search Results', sinon.match([]), 0).returns(expectedBundle)
 
-    store.search('Patient', (err, bundle) => {
-      t.error(err)
-      t.deepEqual(bundle, expectedBundle)
-      t.end()
-    })
+    const bundle = await store.search('Patient')
+    t.deepEqual(bundle, expectedBundle)
   })
 
-  t.test('should correctly build bundle entries', (t) => {
+  t.test('should correctly build bundle entries', async (t) => {
     const resources = [
       common.generatePatient(),
       common.generatePatient(),
@@ -77,14 +73,11 @@ tap.test('Search', (t) => {
 
     bundleCreator.createBundle.withArgs('http://localhost/', 'Search Results', resources.map(sinon.match), resources.length).returns(expectedBundle)
 
-    store.search('Patient', (err, bundle) => {
-      t.error(err)
-      t.deepEqual(bundle, expectedBundle)
-      t.end()
-    })
+    const bundle = await store.search('Patient')
+    t.deepEqual(bundle, expectedBundle)
   })
 
-  t.test('should pass through query options to repo', (t) => {
+  t.test('should pass through query options to repo', async (t) => {
     const query = {
       _count: 10,
       page: 2,
@@ -96,23 +89,22 @@ tap.test('Search', (t) => {
 
     bundleCreator.createBundle.withArgs('http://localhost/', 'Search Results', sinon.match([]), 0).returns(expectedBundle)
 
-    store.search('Practitioner', query, (err, bundle) => {
-      t.error(err)
-      t.deepEqual(bundle, expectedBundle)
-      const self = bundle.link.find((link) => link.rel === 'self')
-      t.equal(self.href, 'http://localhost/Practitioner?_count=10&page=2&identifier=16cd9ef0-e9a9-48a1-b015-b40923e17ddc')
-      t.end()
-    })
+    const bundle = await store.search('Practitioner', query)
+    t.deepEqual(bundle, expectedBundle)
+    const self = bundle.link.find((link) => link.rel === 'self')
+    t.equal(self.href, 'http://localhost/Practitioner?_count=10&page=2&identifier=16cd9ef0-e9a9-48a1-b015-b40923e17ddc')
   })
 
-  t.test('should handle errors from repo', (t) => {
+  t.test('should handle errors from repo', async (t) => {
     repo.searchResources.withArgs('Encounter', sinon.match({})).rejects(new Error('boom'))
 
-    store.search('Encounter', (err) => {
+    try {
+      await store.search('Encounter')
+      t.fail('search should have thrown')
+    } catch (err) {
       t.type(err, Error)
       t.equal(err.message, 'boom')
-      t.end()
-    })
+    }
   })
 
   t.end()
