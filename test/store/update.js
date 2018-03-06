@@ -28,10 +28,9 @@ tap.test('update', (t) => {
     repo: repo
   })
 
-  t.beforeEach((next) => {
+  t.beforeEach(async () => {
     repo.createResource.rejects(new Error('Not stubbed'))
     repo.updateResource.rejects(new Error('Not stubbed'))
-    next()
   })
 
   t.afterEach((next) => {
@@ -42,64 +41,61 @@ tap.test('update', (t) => {
     })
   })
 
-  t.test('should return an error when the resource is falsy', (t) => {
-    store.update(null, (err) => {
+  t.test('should return an error when the resource is falsy', async (t) => {
+    try {
+      await store.update(null)
+      t.fail('update should have thrown')
+    } catch (err) {
       t.type(err, ValidationError)
-      t.end()
-    })
+    }
   })
 
-  t.test('should return an error when the resource has no id', (t) => {
-    store.update({resourceType: 'Patient'}, (err) => {
+  t.test('should return an error when the resource has no id', async (t) => {
+    try {
+      await store.update({resourceType: 'Patient'})
+      t.fail('update should have thrown')
+    } catch (err) {
       t.type(err, ValidationError)
-      t.end()
-    })
+    }
   })
 
-  t.test('should return an error when the resource has no resource type', (t) => {
-    store.update({id: '1'}, (err) => {
+  t.test('should return an error when the resource has no resource type', async (t) => {
+    try {
+      await store.update({id: '1'})
+      t.fail('update should have thrown')
+    } catch (err) {
       t.type(err, ValidationError)
-      t.end()
-    })
+    }
   })
 
-  t.test('should call updateResource and return the result when no options are provided', (t) => {
+  t.test('should call updateResource and return the result when no options are provided', async (t) => {
     const updateInfo = {
       created: false,
       updated: true
     }
-    repo.updateResource.withArgs(expectedResourceMatcher, null).resolves({resource: updatedResource, info: updateInfo})
+    repo.updateResource.withArgs(expectedResourceMatcher).resolves({resource: updatedResource, info: updateInfo})
 
     const resource = Object.assign({}, resourceToUpdate)
-    store.update(resource, (err, returnedResource, returnedInfo) => {
-      t.error(err)
-      t.equal(returnedResource, updatedResource)
-      t.deepEqual(returnedInfo, updateInfo)
-      t.end()
-    })
+    const {resource: returnedResource, info: returnedInfo} = await store.update(resource)
+    t.equal(returnedResource, updatedResource)
+    t.deepEqual(returnedInfo, updateInfo)
   })
 
-  t.test('should call createResource and return the result when the ifNoneMatch option is *', (t) => {
+  t.test('should call createResource and return the result when the ifNoneMatch option is *', async (t) => {
     repo.createResource.withArgs(expectedResourceMatcher).resolves({resource: updatedResource})
 
     const resource = Object.assign({}, resourceToUpdate)
-    store.update(resource, {ifNoneMatch: '*'}, (err, returnedResource) => {
-      t.error(err)
-      t.equal(returnedResource, updatedResource)
-      t.end()
-    })
+    const {resource: returnedResource} = await store.update(resource, {ifNoneMatch: '*'})
+    t.equal(returnedResource, updatedResource)
   })
 
-  t.test('should call updateResource and pass through the options when they are provided', (t) => {
+  t.test('should call updateResource and pass through the options when they are provided', async (t) => {
     const options = {ifMatch: '*'}
     repo.updateResource.withArgs(expectedResourceMatcher, sinon.match(options)).resolves({resource: updatedResource})
 
     const resource = Object.assign({}, resourceToUpdate)
-    store.update(resource, options, (err, returnedResource) => {
-      t.error(err)
-      t.equal(returnedResource, updatedResource)
-      t.end()
-    })
+    const {resource: returnedResource} = await store.update(resource, options)
+    t.equal(returnedResource, updatedResource)
   })
 
   t.end()
