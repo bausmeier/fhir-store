@@ -4,7 +4,7 @@ const {ConflictError} = require('fhir-errors')
 const common = require('../common')
 const tap = require('tap')
 
-tap.test('createResource', common.testWithRepo((t, repo) => {
+tap.test('createResource', common.testWithRepo(async (t, repo) => {
   t.test('should insert the resource into the \'resources\' collection', async (t) => {
     const resource = common.generatePatient()
     const {resource: returnedResource, info: updateInfo} = await repo.createResource(resource)
@@ -49,6 +49,4 @@ tap.test('createResource', common.testWithRepo((t, repo) => {
       t.equal(err.message, `Patient with id ${resource.id} already exists`)
     }
   })
-
-  t.end()
 }))

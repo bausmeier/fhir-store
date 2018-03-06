@@ -15,7 +15,7 @@ function buildResourcesQuery (resources) {
   }
 }
 
-tap.test('updateResources', common.testWithRepo((t, repo) => {
+tap.test('updateResources', common.testWithRepo(async (t, repo) => {
   t.test('should create the resources if they don\'t exist', async (t) => {
     const resources = [
       common.generatePatient(),
@@ -60,6 +60,4 @@ tap.test('updateResources', common.testWithRepo((t, repo) => {
     const updatedResources = await repo._db.collection('versions').find(query, {projection: {_id: 0}}).sort({_id: 1}).toArray()
     t.deepEqual(resources, updatedResources)
   })
-
-  t.end()
 }))

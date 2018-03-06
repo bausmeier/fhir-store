@@ -3,9 +3,9 @@
 const common = require('../common')
 const tap = require('tap')
 
-tap.test('searchResources - Device', common.testWithRepo((t, repo) => {
-  t.beforeEach((next) => {
-    repo._db.collection('resources').remove({resourceType: 'Device'}, next)
+tap.test('searchResources - Device', common.testWithRepo(async (t, repo) => {
+  t.beforeEach(async () => {
+    await repo._db.collection('resources').deleteMany({resourceType: 'Device'})
   })
 
   t.test('should return all device resources when no query parameters are supplied', async (t) => {
@@ -239,6 +239,4 @@ tap.test('searchResources - Device', common.testWithRepo((t, repo) => {
     const {resources: returnedResources} = await repo.searchResources('Device', query)
     t.deepEqual(returnedResources, expectedResources)
   })
-
-  t.end()
 }))

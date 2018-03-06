@@ -5,7 +5,7 @@ const common = require('../common')
 const tap = require('tap')
 const uuid = require('uuid/v1')
 
-tap.test('updateResource', common.testWithRepo((t, repo) => {
+tap.test('updateResource', common.testWithRepo(async (t, repo) => {
   t.test('should create the resource if it does not exist', async (t) => {
     const resource = common.generatePatient()
     const {resource: returnedResource, info: updateInfo} = await repo.updateResource(resource)
@@ -94,6 +94,4 @@ tap.test('updateResource', common.testWithRepo((t, repo) => {
       t.equal(err.message, `Patient with id ${resource.id} does not match`)
     }
   })
-
-  t.end()
 }))

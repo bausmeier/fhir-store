@@ -4,7 +4,7 @@ const {NotFoundError} = require('fhir-errors')
 const common = require('../common')
 const tap = require('tap')
 
-tap.test('delete resource', common.testWithRepo((t, repo) => {
+tap.test('delete resource', common.testWithRepo(async (t, repo) => {
   t.test('should return a not found error if the resource does not exist', async (t) => {
     const patient = common.generatePatient()
     try {
@@ -27,6 +27,4 @@ tap.test('delete resource', common.testWithRepo((t, repo) => {
     const result = await repo._db.collection('resources').findOne(patientQuery)
     t.assert(result == null, 'resource should not be found')
   })
-
-  t.end()
 }))

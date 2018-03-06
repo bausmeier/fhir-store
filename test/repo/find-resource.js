@@ -5,7 +5,7 @@ const common = require('../common')
 const tap = require('tap')
 const uuid = require('uuid/v1')
 
-tap.test('findResource', common.testWithRepo((t, repo) => {
+tap.test('findResource', common.testWithRepo(async (t, repo) => {
   t.test('should return a not found error if the resource is not found', async (t) => {
     const id = uuid()
     try {
@@ -36,6 +36,4 @@ tap.test('findResource', common.testWithRepo((t, repo) => {
     const returnedResource = await repo.findResource(resource.resourceType, resource.id)
     t.deepEqual(returnedResource, resource)
   })
-
-  t.end()
 }))
