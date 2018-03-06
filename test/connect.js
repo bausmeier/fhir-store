@@ -13,49 +13,40 @@ const REQUIRED_OPTIONS = {
   }
 }
 
-tap.test('Connect', (t) => {
-  t.test('should pass through db url and name', (t) => {
+tap.test('Connect', async (t) => {
+  t.test('should pass through db url and name', async (t) => {
     const options = Object.assign({}, REQUIRED_OPTIONS)
-    FHIRStore.connect(options, (err, store) => {
-      t.error(err)
-      t.type(store, Store)
-      t.equal(store._base, 'http://localhost/')
-      t.end()
+    const store = await FHIRStore.connect(options)
+    t.type(store, Store)
+    t.equal(store._base, 'http://localhost/')
 
-      // Close the store so that the test doesn't hang
-      store.close()
-    })
+    // Close the store so that the test doesn't hang
+    await store.close()
   })
 
-  t.test('should have a default base url', (t) => {
+  t.test('should have a default base url', async (t) => {
     const options = Object.assign({}, REQUIRED_OPTIONS)
-    FHIRStore.connect(options, (err, store) => {
-      t.error(err)
-      t.type(store, Store)
-      t.equal(store._base, 'http://localhost/')
-      t.end()
+    const store = await FHIRStore.connect(options)
+    t.type(store, Store)
+    t.equal(store._base, 'http://localhost/')
 
-      // Close the store so that the test doesn't hang
-      store.close()
-    })
+    // Close the store so that the test doesn't hang
+    await store.close()
   })
 
-  t.test('should accept a base url option', (t) => {
+  t.test('should accept a base url option', async (t) => {
     const options = Object.assign({}, REQUIRED_OPTIONS, {
       base: 'https://example.com/fhir/'
     })
-    FHIRStore.connect(options, (err, store) => {
-      t.error(err)
-      t.type(store, Store)
-      t.equal(store._base, 'https://example.com/fhir/')
-      t.end()
+    const store = await FHIRStore.connect(options)
+    t.type(store, Store)
+    t.equal(store._base, 'https://example.com/fhir/')
 
-      // Close the store so that the test doesn't hang
-      store.close()
-    })
+    // Close the store so that the test doesn't hang
+    await store.close()
   })
 
-  t.test('should pass dbOptions through to the database driver', (t) => {
+  t.test('should pass dbOptions through to the database driver', async (t) => {
     sinon.spy(MongoClient, 'connect')
 
     const dbOptions = {
@@ -68,18 +59,13 @@ tap.test('Connect', (t) => {
     }
 
     const options = Object.assign({}, REQUIRED_OPTIONS, {dbOptions})
-    FHIRStore.connect(options, (err, store) => {
-      t.error(err)
-      t.equal(MongoClient.connect.callCount, 1)
-      t.match(MongoClient.connect.firstCall.args[1], dbOptions)
-      t.end()
+    const store = await FHIRStore.connect(options)
+    t.equal(MongoClient.connect.callCount, 1)
+    t.match(MongoClient.connect.firstCall.args[1], dbOptions)
 
-      // Remove the spy
-      MongoClient.connect.restore()
-      // Close the store so that the test doesn't hang
-      store.close()
-    })
+    // Remove the spy
+    MongoClient.connect.restore()
+    // Close the store so that the test doesn't hang
+    await store.close()
   })
-
-  t.end()
 })
