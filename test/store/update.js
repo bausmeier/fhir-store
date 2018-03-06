@@ -20,7 +20,7 @@ const expectedResourceMatcher = sinon.match(
 
 const updatedResource = Object.assign({}, resourceToUpdate)
 
-tap.test('update', (t) => {
+tap.test('update', async (t) => {
   const repo = sinon.createStubInstance(Repo)
 
   const store = new Store({
@@ -97,6 +97,4 @@ tap.test('update', (t) => {
     const {resource: returnedResource} = await store.update(resource, options)
     t.equal(returnedResource, updatedResource)
   })
-
-  t.end()
 })

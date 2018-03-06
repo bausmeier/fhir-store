@@ -4,7 +4,7 @@ const Repo = require('../../lib/repo')
 const Store = require('../../lib/store')
 const tap = require('tap')
 
-tap.test('getRepo', (t) => {
+tap.test('getRepo', async (t) => {
   const repo = Object.create(Repo.prototype)
 
   const store = new Store({
@@ -12,11 +12,8 @@ tap.test('getRepo', (t) => {
     repo
   })
 
-  t.test('should return the underlying repo', (t) => {
+  t.test('should return the underlying repo', async (t) => {
     const returnedRepo = store.getRepo()
     t.equal(returnedRepo, repo)
-    t.end()
   })
-
-  t.end()
 })

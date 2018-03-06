@@ -5,7 +5,7 @@ const Store = require('../../lib/store')
 const tap = require('tap')
 const sinon = require('sinon')
 
-tap.test('Close', (t) => {
+tap.test('Close', async (t) => {
   const repo = sinon.createStubInstance(Repo)
 
   const store = new Store({
@@ -28,6 +28,4 @@ tap.test('Close', (t) => {
     await store.close()
     t.equal(repo.close.callCount, 1)
   })
-
-  t.end()
 })

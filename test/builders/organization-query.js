@@ -3,17 +3,16 @@
 const buildOrganizationQuery = require('../../lib/builders/organization-query')
 const tap = require('tap')
 
-tap.test('Organization query builder', (t) => {
-  t.test('should match on resource when there are no parameters', (t) => {
+tap.test('Organization query builder', async (t) => {
+  t.test('should match on resource when there are no parameters', async (t) => {
     const expectedQuery = {
       resourceType: 'Organization'
     }
     const query = buildOrganizationQuery({}, 'Organization')
     t.deepEqual(query, expectedQuery)
-    t.end()
   })
 
-  tap.test('should add a filter for the identifier query parameter', (t) => {
+  tap.test('should add a filter for the identifier query parameter', async (t) => {
     const expectedQuery = {
       resourceType: 'Organization',
       identifier: {
@@ -26,10 +25,9 @@ tap.test('Organization query builder', (t) => {
       identifier: '123'
     })
     t.deepEqual(query, expectedQuery)
-    t.end()
   })
 
-  tap.test('should add a filter for the identifier query parameter with a namespace', (t) => {
+  tap.test('should add a filter for the identifier query parameter with a namespace', async (t) => {
     const expectedQuery = {
       resourceType: 'Organization',
       identifier: {
@@ -43,10 +41,9 @@ tap.test('Organization query builder', (t) => {
       identifier: 'http://example.com|123'
     })
     t.deepEqual(query, expectedQuery)
-    t.end()
   })
 
-  t.test('should add multiple filters for identifier when multiple identifier values are specified', (t) => {
+  t.test('should add multiple filters for identifier when multiple identifier values are specified', async (t) => {
     const expectedQuery = {
       resourceType: 'Organization',
       $and: [
@@ -76,7 +73,5 @@ tap.test('Organization query builder', (t) => {
       identifier: 'http://example.com|123,http://h17.org/fhir|456'
     })
     t.deepEqual(query, expectedQuery)
-    t.end()
   })
-  t.end()
 })

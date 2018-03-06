@@ -6,7 +6,7 @@ const common = require('../common')
 const sinon = require('sinon')
 const tap = require('tap')
 
-tap.test('read', (t) => {
+tap.test('read', async (t) => {
   const repo = sinon.createStubInstance(Repo)
 
   const store = new Store({
@@ -44,6 +44,4 @@ tap.test('read', (t) => {
       t.equal(err.message, 'Oops')
     }
   })
-
-  t.end()
 })

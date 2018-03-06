@@ -33,7 +33,7 @@ function generateBundle (resources = []) {
   }
 }
 
-tap.test('Transaction', (t) => {
+tap.test('Transaction', async (t) => {
   const repo = sinon.createStubInstance(Repo)
 
   const store = new Store({
@@ -190,6 +190,4 @@ tap.test('Transaction', (t) => {
     const bundle = await store.transaction(transaction)
     t.deepEqual(bundle, expectedBundle)
   })
-
-  t.end()
 })

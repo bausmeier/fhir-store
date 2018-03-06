@@ -6,42 +6,35 @@ const tap = require('tap')
 const {Db, MongoClient} = require('mongodb')
 const sinon = require('sinon')
 
-tap.test('getQueryBuilder', (t) => {
+tap.test('getQueryBuilder', async (t) => {
   const client = sinon.createStubInstance(MongoClient)
   const db = sinon.createStubInstance(Db)
   client.db.returns(db)
 
   const repo = new Repo(client, 'fhir-store-test')
 
-  t.test('should return the correct query builder', (t) => {
+  t.test('should return the correct query builder', async (t) => {
     const queryBuilder = repo.getQueryBuilder('Patient')
     t.equal(queryBuilder, patientQueryBuilder)
-    t.end()
   })
-
-  t.end()
 })
 
-tap.test('setQueryBuilder', (t) => {
+tap.test('setQueryBuilder', async (t) => {
   const client = sinon.createStubInstance(MongoClient)
   const db = sinon.createStubInstance(Db)
   client.db.returns(db)
 
-  t.test('should add new query builders', (t) => {
+  t.test('should add new query builders', async (t) => {
     const repo = new Repo(client, 'fhir-store-test')
     function customQueryBuilder () {}
     repo.setQueryBuilder('Custom', customQueryBuilder)
     t.equal(repo._builders.Custom, customQueryBuilder)
-    t.end()
   })
 
-  t.test('should replace existing query builders', (t) => {
+  t.test('should replace existing query builders', async (t) => {
     const repo = new Repo(client, 'fhir-store-test')
     function customPatientQueryBuilder () {}
     repo.setQueryBuilder('Patient', customPatientQueryBuilder)
     t.equal(repo._builders.Patient, customPatientQueryBuilder)
-    t.end()
   })
-
-  t.end()
 })

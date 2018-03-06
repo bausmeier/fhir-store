@@ -3,8 +3,8 @@
 const buildObservationQuery = require('../../lib/builders/observation-query')
 const tap = require('tap')
 
-tap.test('Observation query builder', (t) => {
-  t.test('should filter by id for _id parameter', (t) => {
+tap.test('Observation query builder', async (t) => {
+  t.test('should filter by id for _id parameter', async (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
       id: '123'
@@ -13,10 +13,9 @@ tap.test('Observation query builder', (t) => {
       _id: '123'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a regex filter for the id subject parameter', (t) => {
+  t.test('should add a regex filter for the id subject parameter', async (t) => {
     const filters = buildObservationQuery({
       subject: '123'
     })
@@ -38,10 +37,9 @@ tap.test('Observation query builder', (t) => {
     t.ok(filters['subject.reference'].test('Location/123/_history/1'))
     t.ok(filters['subject.reference'].test('http://localhost/Location/123'))
     t.ok(filters['subject.reference'].test('http://localhost/Location/123/_history/1'))
-    t.end()
   })
 
-  t.test('should add a regex filter for the id subject parameter by type', (t) => {
+  t.test('should add a regex filter for the id subject parameter by type', async (t) => {
     const filters = buildObservationQuery({
       'subject:Patient': '123'
     })
@@ -63,10 +61,9 @@ tap.test('Observation query builder', (t) => {
     t.notOk(filters['subject.reference'].test('Location/123/_history/1'))
     t.notOk(filters['subject.reference'].test('http://localhost/Location/123'))
     t.notOk(filters['subject.reference'].test('http://localhost/Location/123/_history/1'))
-    t.end()
   })
 
-  t.test('should add a regex filter for the relative reference subject parameter', (t) => {
+  t.test('should add a regex filter for the relative reference subject parameter', async (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
       'subject.reference': 'Patient/123'
@@ -75,10 +72,9 @@ tap.test('Observation query builder', (t) => {
       subject: 'Patient/123'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a regex filter for the absolute reference subject parameter', (t) => {
+  t.test('should add a regex filter for the absolute reference subject parameter', async (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
       'subject.reference': 'http://example.com/Patient/123'
@@ -87,10 +83,9 @@ tap.test('Observation query builder', (t) => {
       subject: 'http://example.com/Patient/123'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a filter for the name query parameter when no system is provided', (t) => {
+  t.test('should add a filter for the name query parameter when no system is provided', async (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
       $and: [
@@ -111,10 +106,9 @@ tap.test('Observation query builder', (t) => {
       name: '8480-6'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a filter for the name query parameter when a system is provided', (t) => {
+  t.test('should add a filter for the name query parameter when a system is provided', async (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
       $and: [
@@ -136,10 +130,9 @@ tap.test('Observation query builder', (t) => {
       name: 'http://loinc.org|8480-6'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a filter for the name query parameter when multiple codes are provided', (t) => {
+  t.test('should add a filter for the name query parameter when multiple codes are provided', async (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
       $and: [
@@ -167,10 +160,9 @@ tap.test('Observation query builder', (t) => {
       name: '8480-6,8462-4'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a filter for the name query parameter when multiple codes and systems are provided', (t) => {
+  t.test('should add a filter for the name query parameter when multiple codes and systems are provided', async (t) => {
     const expectedFilters = {
       resourceType: 'Observation',
       $and: [
@@ -200,8 +192,5 @@ tap.test('Observation query builder', (t) => {
       name: 'http://loinc.org|8480-6,http://loinc.org|8462-4'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
-
-  t.end()
 })

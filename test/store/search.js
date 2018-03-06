@@ -32,7 +32,7 @@ function generateBundle (resources = []) {
   }
 }
 
-tap.test('Search', (t) => {
+tap.test('Search', async (t) => {
   const repo = sinon.createStubInstance(Repo)
 
   const store = new Store({base: 'http://localhost/', repo})
@@ -106,6 +106,4 @@ tap.test('Search', (t) => {
       t.equal(err.message, 'boom')
     }
   })
-
-  t.end()
 })

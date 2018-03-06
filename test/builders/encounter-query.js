@@ -3,8 +3,8 @@
 const encounterQueryBuilder = require('../../lib/builders/encounter-query')
 const tap = require('tap')
 
-tap.test('Encounter query builder', (t) => {
-  t.test('should filter by id for _id parameter', (t) => {
+tap.test('Encounter query builder', async (t) => {
+  t.test('should filter by id for _id parameter', async (t) => {
     const expectedFilters = {
       resourceType: 'Encounter',
       id: '123'
@@ -13,10 +13,9 @@ tap.test('Encounter query builder', (t) => {
       _id: '123'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a regex filter for the id subject parameter', (t) => {
+  t.test('should add a regex filter for the id subject parameter', async (t) => {
     const filters = encounterQueryBuilder({
       subject: '123'
     })
@@ -26,10 +25,9 @@ tap.test('Encounter query builder', (t) => {
     t.ok(filters['subject.reference'].test('/Patient/123/_history/1'))
     t.ok(filters['subject.reference'].test('http://localhost/Patient/123'))
     t.ok(filters['subject.reference'].test('http://localhost/Patient/123/_history/1'))
-    t.end()
   })
 
-  t.test('should add a regex filter for the relative reference subject parameter', (t) => {
+  t.test('should add a regex filter for the relative reference subject parameter', async (t) => {
     const expectedFilters = {
       resourceType: 'Encounter',
       'subject.reference': 'Patient/123'
@@ -38,10 +36,9 @@ tap.test('Encounter query builder', (t) => {
       subject: 'Patient/123'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a regex filter for the absolute reference subject parameter', (t) => {
+  t.test('should add a regex filter for the absolute reference subject parameter', async (t) => {
     const expectedFilters = {
       resourceType: 'Encounter',
       'subject.reference': 'http://example.com/Patient/123'
@@ -50,10 +47,9 @@ tap.test('Encounter query builder', (t) => {
       subject: 'http://example.com/Patient/123'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a filter for the class', (t) => {
+  t.test('should add a filter for the class', async (t) => {
     const expectedFilters = {
       resourceType: 'Encounter',
       class: 'ambulatory'
@@ -62,10 +58,9 @@ tap.test('Encounter query builder', (t) => {
       class: 'ambulatory'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add an $or filter for multiple classes', (t) => {
+  t.test('should add an $or filter for multiple classes', async (t) => {
     const expectedFilters = {
       resourceType: 'Encounter',
       $and: [
@@ -86,8 +81,5 @@ tap.test('Encounter query builder', (t) => {
       class: 'ambulatory,outpatient'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
-
-  t.end()
 })

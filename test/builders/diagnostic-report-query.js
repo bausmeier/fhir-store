@@ -3,8 +3,8 @@
 const buildDiagnosticReportQuery = require('../../lib/builders/diagnostic-report-query')
 const tap = require('tap')
 
-tap.test('DiagnosticReport query builder', (t) => {
-  t.test('should filter by id for _id parameter', (t) => {
+tap.test('DiagnosticReport query builder', async (t) => {
+  t.test('should filter by id for _id parameter', async (t) => {
     const expectedFilters = {
       resourceType: 'DiagnosticReport',
       id: '123'
@@ -13,10 +13,9 @@ tap.test('DiagnosticReport query builder', (t) => {
       _id: '123'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a regex filter for the id subject parameter', (t) => {
+  t.test('should add a regex filter for the id subject parameter', async (t) => {
     const filters = buildDiagnosticReportQuery({
       subject: '123'
     })
@@ -38,10 +37,9 @@ tap.test('DiagnosticReport query builder', (t) => {
     t.ok(filters['subject.reference'].test('Location/123/_history/1'))
     t.ok(filters['subject.reference'].test('http://localhost/Location/123'))
     t.ok(filters['subject.reference'].test('http://localhost/Location/123/_history/1'))
-    t.end()
   })
 
-  t.test('should add a regex filter for the id subject parameter by type', (t) => {
+  t.test('should add a regex filter for the id subject parameter by type', async (t) => {
     const filters = buildDiagnosticReportQuery({
       'subject:Patient': '123'
     })
@@ -63,10 +61,9 @@ tap.test('DiagnosticReport query builder', (t) => {
     t.notOk(filters['subject.reference'].test('Location/123/_history/1'))
     t.notOk(filters['subject.reference'].test('http://localhost/Location/123'))
     t.notOk(filters['subject.reference'].test('http://localhost/Location/123/_history/1'))
-    t.end()
   })
 
-  t.test('should add a regex filter for the relative reference subject parameter', (t) => {
+  t.test('should add a regex filter for the relative reference subject parameter', async (t) => {
     const expectedFilters = {
       resourceType: 'DiagnosticReport',
       'subject.reference': 'Patient/123'
@@ -75,10 +72,9 @@ tap.test('DiagnosticReport query builder', (t) => {
       subject: 'Patient/123'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
 
-  t.test('should add a regex filter for the absolute reference subject parameter', (t) => {
+  t.test('should add a regex filter for the absolute reference subject parameter', async (t) => {
     const expectedFilters = {
       resourceType: 'DiagnosticReport',
       'subject.reference': 'http://example.com/Patient/123'
@@ -87,8 +83,5 @@ tap.test('DiagnosticReport query builder', (t) => {
       subject: 'http://example.com/Patient/123'
     })
     t.deepEqual(filters, expectedFilters)
-    t.end()
   })
-
-  t.end()
 })

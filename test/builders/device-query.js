@@ -3,17 +3,16 @@
 const buildDeviceQuery = require('../../lib/builders/device-query')
 const tap = require('tap')
 
-tap.test('Device Query Builder', (t) => {
-  t.test('should match on resource when there are no parameters', (t) => {
+tap.test('Device Query Builder', async (t) => {
+  t.test('should match on resource when there are no parameters', async (t) => {
     const expectedQuery = {
       resourceType: 'Device'
     }
     const query = buildDeviceQuery({})
     t.deepEqual(query, expectedQuery)
-    t.end()
   })
 
-  tap.test('should add a filter for the identifier query parameter', (t) => {
+  tap.test('should add a filter for the identifier query parameter', async (t) => {
     const expectedQuery = {
       resourceType: 'Device',
       identifier: {
@@ -26,10 +25,9 @@ tap.test('Device Query Builder', (t) => {
       identifier: '123'
     })
     t.deepEqual(query, expectedQuery)
-    t.end()
   })
 
-  tap.test('should add a filter for the identifier query parameter with a namespace', (t) => {
+  tap.test('should add a filter for the identifier query parameter with a namespace', async (t) => {
     const expectedQuery = {
       resourceType: 'Device',
       identifier: {
@@ -43,10 +41,9 @@ tap.test('Device Query Builder', (t) => {
       identifier: 'http://example.com|123'
     })
     t.deepEqual(query, expectedQuery)
-    t.end()
   })
 
-  t.test('should add a filter for the patient query parameter', (t) => {
+  t.test('should add a filter for the patient query parameter', async (t) => {
     const expectedQuery = {
       resourceType: 'Device',
       'patient.reference': /(Patient)\/123(\/_history\/[A-Za-z0-9-.]{1,64})?$/
@@ -55,10 +52,9 @@ tap.test('Device Query Builder', (t) => {
       patient: '123'
     })
     t.deepEqual(query, expectedQuery)
-    t.end()
   })
 
-  t.test('should add a filter for the patient query parameter it is a url', (t) => {
+  t.test('should add a filter for the patient query parameter it is a url', async (t) => {
     const expectedQuery = {
       resourceType: 'Device',
       'patient.reference': 'Patient/123'
@@ -67,8 +63,5 @@ tap.test('Device Query Builder', (t) => {
       patient: 'Patient/123'
     })
     t.deepEqual(query, expectedQuery)
-    t.end()
   })
-
-  t.end()
 })

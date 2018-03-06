@@ -5,7 +5,7 @@ const Store = require('../../lib/store')
 const tap = require('tap')
 const sinon = require('sinon')
 
-tap.test('delete', (t) => {
+tap.test('delete', async (t) => {
   const repo = sinon.createStubInstance(Repo)
   const store = new Store({
     base: 'http://localhost/',
@@ -40,6 +40,4 @@ tap.test('delete', (t) => {
       t.equal(err.message, 'boom')
     }
   })
-
-  t.end()
 })

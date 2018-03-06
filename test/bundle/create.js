@@ -4,8 +4,8 @@ const common = require('../common')
 const tap = require('tap')
 const {createBundle} = require('../../lib/bundle')
 
-tap.test('Create', (t) => {
-  t.test('should populate the standard fields', (t) => {
+tap.test('Create', async (t) => {
+  t.test('should populate the standard fields', async (t) => {
     const expectedBundle = {
       resourceType: 'Bundle',
       title: 'Test Bundle',
@@ -21,10 +21,9 @@ tap.test('Create', (t) => {
 
     const bundle = createBundle('http://example.com/', 'Test Bundle', [])
     t.match(bundle, expectedBundle)
-    t.end()
   })
 
-  t.test('should return an empty bundle when there are no resources', (t) => {
+  t.test('should return an empty bundle when there are no resources', async (t) => {
     const expectedBundle = {
       title: 'Empty Bundle',
       totalResults: 0,
@@ -33,10 +32,9 @@ tap.test('Create', (t) => {
 
     const bundle = createBundle('http://localhost/', 'Empty Bundle', [])
     t.match(bundle, expectedBundle)
-    t.end()
   })
 
-  t.test('should allow the total results to be set', (t) => {
+  t.test('should allow the total results to be set', async (t) => {
     const expectedBundle = {
       title: 'Empty Bundle',
       totalResults: 17,
@@ -45,10 +43,9 @@ tap.test('Create', (t) => {
 
     const bundle = createBundle('http://localhost/', 'Empty Bundle', [], 17)
     t.match(bundle, expectedBundle)
-    t.end()
   })
 
-  t.test('should contain bundle entries when there are resources', (t) => {
+  t.test('should contain bundle entries when there are resources', async (t) => {
     const resources = [
       common.generatePatient(),
       common.generateEncounter(),
@@ -76,8 +73,5 @@ tap.test('Create', (t) => {
 
     const bundle = createBundle('http://localhost/', 'Bundle with Resources', resources)
     t.match(bundle, expectedBundle)
-    t.end()
   })
-
-  t.end()
 })
