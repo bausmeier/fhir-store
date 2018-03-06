@@ -86,31 +86,25 @@ tap.test('searchResources - Observation', common.testWithRepo((t, repo) => {
       // Put the existing resources into expected order
       existingResources.reverse()
 
-      t.test('should return all observations when no query parameters are specified', (t) => {
+      t.test('should return all observations when no query parameters are specified', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Observation'
         })
-        repo.searchResources('Observation', {}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Observation', {})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct observations when searching by subject absolute reference', (t) => {
+      t.test('should return the correct observations when searching by subject absolute reference', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Observation' &&
               resource.subject &&
               resource.subject.reference === `Patient/${referenceId}`
         })
-        repo.searchResources('Observation', {subject: `Patient/${referenceId}`}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Observation', {subject: `Patient/${referenceId}`})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct observations when searching by unqualified subject id reference', (t) => {
+      t.test('should return the correct observations when searching by unqualified subject id reference', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Observation' &&
             resource.subject &&
@@ -119,69 +113,54 @@ tap.test('searchResources - Observation', common.testWithRepo((t, repo) => {
               resource.subject.reference === `Group/${referenceId}` ||
               resource.subject.reference === `Location/${referenceId}`)
         })
-        repo.searchResources('Observation', {subject: referenceId}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Observation', {subject: referenceId})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct observations when searching by subject id reference', (t) => {
+      t.test('should return the correct observations when searching by subject id reference', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Observation' &&
             resource.subject &&
             resource.subject.reference === `Patient/${referenceId}`
         })
-        repo.searchResources('Observation', {'subject:Patient': referenceId}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Observation', {'subject:Patient': referenceId})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct observations when searching by name code', (t) => {
+      t.test('should return the correct observations when searching by name code', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Observation' &&
             resource.name.coding.some((coding) => {
               return coding.code === FIRST_NAME_CODE
             })
         })
-        repo.searchResources('Observation', {name: FIRST_NAME_CODE}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Observation', {name: FIRST_NAME_CODE})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct observations when searching by name code and system', (t) => {
+      t.test('should return the correct observations when searching by name code and system', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Observation' &&
             resource.name.coding.some((coding) => {
               return coding.system === NAME_CODING_SYSTEM && coding.code === FIRST_NAME_CODE
             })
         })
-        repo.searchResources('Observation', {name: `${NAME_CODING_SYSTEM}|${FIRST_NAME_CODE}`}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Observation', {name: `${NAME_CODING_SYSTEM}|${FIRST_NAME_CODE}`})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct observations when searching by name with multiple codes', (t) => {
+      t.test('should return the correct observations when searching by name with multiple codes', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Observation' &&
             resource.name.coding.some((coding) => {
               return coding.code === FIRST_NAME_CODE || coding.code === SECOND_NAME_CODE
             })
         })
-        repo.searchResources('Observation', {name: `${FIRST_NAME_CODE},${SECOND_NAME_CODE}`}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Observation', {name: `${FIRST_NAME_CODE},${SECOND_NAME_CODE}`})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct observations when searching by name with multiple codes and systems', (t) => {
+      t.test('should return the correct observations when searching by name with multiple codes and systems', async (t) => {
         const expectedResources = existingResources.filter(resource => {
           return resource.resourceType === 'Observation' &&
             resource.name.coding.some(coding => {
@@ -189,11 +168,8 @@ tap.test('searchResources - Observation', common.testWithRepo((t, repo) => {
                 (coding.code === FIRST_NAME_CODE || coding.code === SECOND_NAME_CODE)
             })
         })
-        repo.searchResources('Observation', {name: `${NAME_CODING_SYSTEM}|${FIRST_NAME_CODE},${NAME_CODING_SYSTEM}|${SECOND_NAME_CODE}`}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Observation', {name: `${NAME_CODING_SYSTEM}|${FIRST_NAME_CODE},${NAME_CODING_SYSTEM}|${SECOND_NAME_CODE}`})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
       t.end()

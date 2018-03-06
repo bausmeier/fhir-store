@@ -48,31 +48,25 @@ tap.test('searchResources - DiagnosticReport', common.testWithRepo((t, repo) => 
       // Put the existing resources into expected order
       existingResources.reverse()
 
-      t.test('should return all diagnostic reports when no query parameters are specified', (t) => {
+      t.test('should return all diagnostic reports when no query parameters are specified', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'DiagnosticReport'
         })
-        repo.searchResources('DiagnosticReport', {}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('DiagnosticReport', {})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct diagnostic reports when searching by subject absolute reference', (t) => {
+      t.test('should return the correct diagnostic reports when searching by subject absolute reference', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'DiagnosticReport' &&
               resource.subject &&
               resource.subject.reference === `Patient/${referenceId}`
         })
-        repo.searchResources('DiagnosticReport', {subject: `Patient/${referenceId}`}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('DiagnosticReport', {subject: `Patient/${referenceId}`})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct diagnostic reports when searching by unqualified subject id reference', (t) => {
+      t.test('should return the correct diagnostic reports when searching by unqualified subject id reference', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'DiagnosticReport' &&
             resource.subject &&
@@ -81,24 +75,18 @@ tap.test('searchResources - DiagnosticReport', common.testWithRepo((t, repo) => 
               resource.subject.reference === `Group/${referenceId}` ||
               resource.subject.reference === `Location/${referenceId}`)
         })
-        repo.searchResources('DiagnosticReport', {subject: referenceId}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('DiagnosticReport', {subject: referenceId})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct diagnostic reports when searching by subject id reference', (t) => {
+      t.test('should return the correct diagnostic reports when searching by subject id reference', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'DiagnosticReport' &&
             resource.subject &&
             resource.subject.reference === `Patient/${referenceId}`
         })
-        repo.searchResources('DiagnosticReport', {'subject:Patient': referenceId}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('DiagnosticReport', {'subject:Patient': referenceId})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
       t.end()

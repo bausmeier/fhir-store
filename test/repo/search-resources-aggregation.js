@@ -45,12 +45,9 @@ tap.test('searchResources with aggregation query', common.testWithRepo((t, repo)
     repo._db.collection('resources').insertMany(existingResources, (err) => {
       t.error(err)
 
-      t.test('should return the expected resources', (t) => {
-        repo.searchResources('Observation', {}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+      t.test('should return the expected resources', async (t) => {
+        const {resources: returnedResources} = await repo.searchResources('Observation', {})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
       t.end()

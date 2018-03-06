@@ -8,7 +8,7 @@ tap.test('searchResources - Organization', common.testWithRepo((t, repo) => {
     repo._db.collection('resources').remove({resourceType: 'Organization'}, next)
   })
 
-  t.test('should return the correct resources when no query parameters are specified', (t) => {
+  t.test('should return the correct resources when no query parameters are specified', async (t) => {
     const organization = common.generateOrganization()
     const expectedResources = [
       organization
@@ -18,18 +18,13 @@ tap.test('searchResources - Organization', common.testWithRepo((t, repo) => {
       common.generatePatient()
     ]
 
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      repo.searchResources('Organization', {}, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const {resources: returnedResources} = await repo.searchResources('Organization', {})
+    t.deepEqual(returnedResources, expectedResources)
   })
 
-  t.test('should return the correct resources when searching by identifier', (t) => {
+  t.test('should return the correct resources when searching by identifier', async (t) => {
     const identifierValue = '123'
     const firstExpectedOrganization = Object.assign(
       common.generateOrganization(),
@@ -88,19 +83,14 @@ tap.test('searchResources - Organization', common.testWithRepo((t, repo) => {
       )
     ]
 
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      const query = {identifier: identifierValue}
-      repo.searchResources('Organization', query, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const query = {identifier: identifierValue}
+    const {resources: returnedResources} = await repo.searchResources('Organization', query)
+    t.deepEqual(returnedResources, expectedResources)
   })
 
-  t.test('should return the correct resources when searching by name spaced identifier', (t) => {
+  t.test('should return the correct resources when searching by name spaced identifier', async (t) => {
     const identifierValue = '123'
     const identifierSystem = 'http://example.com'
     const expectedOrganization = Object.assign(
@@ -158,19 +148,14 @@ tap.test('searchResources - Organization', common.testWithRepo((t, repo) => {
       expectedOrganization
     ]
 
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      const query = {identifier: `${identifierSystem}|${identifierValue}`}
-      repo.searchResources('Organization', query, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const query = {identifier: `${identifierSystem}|${identifierValue}`}
+    const {resources: returnedResources} = await repo.searchResources('Organization', query)
+    t.deepEqual(returnedResources, expectedResources)
   })
 
-  t.test('should return the correct resources when searching for the union of multiple identifiers', (t) => {
+  t.test('should return the correct resources when searching for the union of multiple identifiers', async (t) => {
     const firstIdentifierValue = '123'
     const secondIdentifierValue = '456'
     const firstExpectedOrganization = Object.assign(
@@ -226,16 +211,11 @@ tap.test('searchResources - Organization', common.testWithRepo((t, repo) => {
       )
     ]
 
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      const query = {identifier: `${firstIdentifierValue},${secondIdentifierValue}`}
-      repo.searchResources('Organization', query, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const query = {identifier: `${firstIdentifierValue},${secondIdentifierValue}`}
+    const {resources: returnedResources} = await repo.searchResources('Organization', query)
+    t.deepEqual(returnedResources, expectedResources)
   })
 
   t.end()

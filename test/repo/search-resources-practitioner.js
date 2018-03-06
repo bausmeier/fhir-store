@@ -8,7 +8,7 @@ tap.test('searchResources - Practitioner', common.testWithRepo((t, repo) => {
     repo._db.collection('resources').remove({resourceType: 'Practitioner'}, next)
   })
 
-  t.test('should return the correct resources when no query parameters are specified', (t) => {
+  t.test('should return the correct resources when no query parameters are specified', async (t) => {
     const practitioner = common.generatePractitioner()
     const expectedResources = [
       practitioner
@@ -19,18 +19,13 @@ tap.test('searchResources - Practitioner', common.testWithRepo((t, repo) => {
       common.generatePatient()
     ]
 
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      repo.searchResources('Practitioner', {}, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const {resources: returnedResources} = await repo.searchResources('Practitioner', {})
+    t.deepEqual(returnedResources, expectedResources)
   })
 
-  t.test('should return the correct resources when searching by identifier', (t) => {
+  t.test('should return the correct resources when searching by identifier', async (t) => {
     const identifierValue = '123'
     const firstExpectedPractitioner = Object.assign(
       common.generatePractitioner(),
@@ -86,19 +81,14 @@ tap.test('searchResources - Practitioner', common.testWithRepo((t, repo) => {
       )
     ]
 
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      const query = {identifier: identifierValue}
-      repo.searchResources('Practitioner', query, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const query = {identifier: identifierValue}
+    const {resources: returnedResources} = await repo.searchResources('Practitioner', query)
+    t.deepEqual(returnedResources, expectedResources)
   })
 
-  t.test('should return the correct resources when searching by namespaced identifier', (t) => {
+  t.test('should return the correct resources when searching by namespaced identifier', async (t) => {
     const identifierValue = '123'
     const identifierSystem = 'http://example.com'
     const expectedPractitioner = Object.assign(
@@ -156,19 +146,14 @@ tap.test('searchResources - Practitioner', common.testWithRepo((t, repo) => {
       expectedPractitioner
     ]
 
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      const query = {identifier: `${identifierSystem}|${identifierValue}`}
-      repo.searchResources('Practitioner', query, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const query = {identifier: `${identifierSystem}|${identifierValue}`}
+    const {resources: returnedResources} = await repo.searchResources('Practitioner', query)
+    t.deepEqual(returnedResources, expectedResources)
   })
 
-  t.test('should return the correct resources when searching for the union of multiple identifiers', (t) => {
+  t.test('should return the correct resources when searching for the union of multiple identifiers', async (t) => {
     const firstIdentifierValue = '123'
     const secondIdentifierValue = '456'
     const firstExpectedPractitioner = Object.assign(
@@ -224,16 +209,11 @@ tap.test('searchResources - Practitioner', common.testWithRepo((t, repo) => {
       )
     ]
 
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      const query = {identifier: `${firstIdentifierValue},${secondIdentifierValue}`}
-      repo.searchResources('Practitioner', query, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const query = {identifier: `${firstIdentifierValue},${secondIdentifierValue}`}
+    const {resources: returnedResources} = await repo.searchResources('Practitioner', query)
+    t.deepEqual(returnedResources, expectedResources)
   })
 
   t.end()

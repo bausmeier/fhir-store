@@ -40,41 +40,32 @@ tap.test('searchResources - Patient', common.testWithRepo((t, repo) => {
       // Put the existing resources into expected order
       existingResources.reverse()
 
-      t.test('should return all patients when no query parameters are specified', (t) => {
+      t.test('should return all patients when no query parameters are specified', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Patient'
         })
-        repo.searchResources('Patient', {}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Patient', {})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct patients when searching by identifier', (t) => {
+      t.test('should return the correct patients when searching by identifier', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Patient' &&
               resource.identifier &&
               resource.identifier.some((id) => id.value === identifier)
         })
-        repo.searchResources('Patient', {identifier}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Patient', {identifier})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct patients when searching by identifier and system', (t) => {
+      t.test('should return the correct patients when searching by identifier and system', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Patient' &&
               resource.identifier &&
               resource.identifier.some((id) => id.value === identifier && id.system === system)
         })
-        repo.searchResources('Patient', {identifier: `${system}|${identifier}`}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Patient', {identifier: `${system}|${identifier}`})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
       t.end()

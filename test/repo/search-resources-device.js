@@ -8,7 +8,7 @@ tap.test('searchResources - Device', common.testWithRepo((t, repo) => {
     repo._db.collection('resources').remove({resourceType: 'Device'}, next)
   })
 
-  t.test('should return all device resources when no query parameters are supplied', (t) => {
+  t.test('should return all device resources when no query parameters are supplied', async (t) => {
     const device = common.generateDevice()
     const expectedResources = [
       device
@@ -20,18 +20,13 @@ tap.test('searchResources - Device', common.testWithRepo((t, repo) => {
       // Excluded by resource type
       common.generateDiagnosticReport()
     ]
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      repo.searchResources('Device', {}, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const {resources: returnedResources} = await repo.searchResources('Device', {})
+    t.deepEqual(returnedResources, expectedResources)
   })
 
-  t.test('should return matching device resources when searching by identifier', (t) => {
+  t.test('should return matching device resources when searching by identifier', async (t) => {
     const identifierValue = 'c1ab300f-12e9-424b-9cdf-2fe532244f9a'
     const firstExpectedDevice = Object.assign(
       common.generateDevice(),
@@ -75,21 +70,16 @@ tap.test('searchResources - Device', common.testWithRepo((t, repo) => {
       ),
       secondExpectedDevice
     ]
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      const query = {
-        identifier: identifierValue
-      }
-      repo.searchResources('Device', query, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const query = {
+      identifier: identifierValue
+    }
+    const {resources: returnedResources} = await repo.searchResources('Device', query)
+    t.deepEqual(returnedResources, expectedResources)
   })
 
-  t.test('should return matching device resources when searching by namespaced identifier', (t) => {
+  t.test('should return matching device resources when searching by namespaced identifier', async (t) => {
     const identifierValue = 'c1ab300f-12e9-424b-9cdf-2fe532244f9a'
     const expectedDevice = Object.assign(
       common.generateDevice(),
@@ -131,21 +121,16 @@ tap.test('searchResources - Device', common.testWithRepo((t, repo) => {
         }
       )
     ]
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      const query = {
-        identifier: `http://example.com|${identifierValue}`
-      }
-      repo.searchResources('Device', query, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const query = {
+      identifier: `http://example.com|${identifierValue}`
+    }
+    const {resources: returnedResources} = await repo.searchResources('Device', query)
+    t.deepEqual(returnedResources, expectedResources)
   })
 
-  t.test('should return matching device resources when searching by patient id', (t) => {
+  t.test('should return matching device resources when searching by patient id', async (t) => {
     const patientId = 'c4718c22-c924-4984-be65-7afa7d10709a'
     const firstExpectedDevice = Object.assign(
       common.generateDevice(),
@@ -191,21 +176,16 @@ tap.test('searchResources - Device', common.testWithRepo((t, repo) => {
       ),
       secondExpectedDevice
     ]
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      const query = {
-        patient: patientId
-      }
-      repo.searchResources('Device', query, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const query = {
+      patient: patientId
+    }
+    const {resources: returnedResources} = await repo.searchResources('Device', query)
+    t.deepEqual(returnedResources, expectedResources)
   })
 
-  t.test('should return matching device resources when searching by patient reference', (t) => {
+  t.test('should return matching device resources when searching by patient reference', async (t) => {
     const patientId = 'c4718c22-c924-4984-be65-7afa7d10709a'
     const patientReference = `http://example.com/fhir/Patient/${patientId}`
     const expectedDevice = Object.assign(
@@ -251,18 +231,13 @@ tap.test('searchResources - Device', common.testWithRepo((t, repo) => {
         }
       )
     ]
-    repo._db.collection('resources').insertMany(existingResources, (err) => {
-      t.error(err)
+    await repo._db.collection('resources').insertMany(existingResources)
 
-      const query = {
-        patient: patientReference
-      }
-      repo.searchResources('Device', query, (err, returnedResources) => {
-        t.error(err)
-        t.deepEqual(returnedResources, expectedResources)
-        t.end()
-      })
-    })
+    const query = {
+      patient: patientReference
+    }
+    const {resources: returnedResources} = await repo.searchResources('Device', query)
+    t.deepEqual(returnedResources, expectedResources)
   })
 
   t.end()

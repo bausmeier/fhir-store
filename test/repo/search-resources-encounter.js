@@ -45,71 +45,56 @@ tap.test('searchResources - Encounter', common.testWithRepo((t, repo) => {
       // Put the existing resources into expected order
       existingResources.reverse()
 
-      t.test('should return all encounters when no query parameters are specified', (t) => {
+      t.test('should return all encounters when no query parameters are specified', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Encounter'
         })
-        repo.searchResources('Encounter', {}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Encounter', {})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct encounters when searching by subject absolute reference', (t) => {
+      t.test('should return the correct encounters when searching by subject absolute reference', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Encounter' &&
               resource.subject &&
               resource.subject.reference === `Patient/${patientId}`
         })
-        repo.searchResources('Encounter', {subject: `Patient/${patientId}`}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Encounter', {subject: `Patient/${patientId}`})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct encounters when searching by subject id reference', (t) => {
+      t.test('should return the correct encounters when searching by subject id reference', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Encounter' &&
             resource.subject &&
             resource.subject.reference === `Patient/${patientId}`
         })
-        repo.searchResources('Encounter', {'subject:Patient': patientId}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Encounter', {'subject:Patient': patientId})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct encounters when searching by class', t => {
+      t.test('should return the correct encounters when searching by class', async t => {
         const expectedResources = existingResources.filter(resource => {
           return resource.resourceType === 'Encounter' &&
             resource.class &&
             resource.class === inpatient
         })
-        repo.searchResources('Encounter', {class: inpatient}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Encounter', {class: inpatient})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct encounters when searching by two classes', t => {
+      t.test('should return the correct encounters when searching by two classes', async t => {
         const expectedResources = existingResources.filter(resource => {
           return resource.resourceType === 'Encounter' &&
             resource.class &&
             (resource.class === inpatient || resource.class === outpatient)
         })
 
-        repo.searchResources('Encounter', {class: `${inpatient},${outpatient}`}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Encounter', {class: `${inpatient},${outpatient}`})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
-      t.test('should return the correct encounters when searching by subject id reference and class', t => {
+      t.test('should return the correct encounters when searching by subject id reference and class', async t => {
         const expectedResources = existingResources.filter(resource => {
           return (
             resource.resourceType === 'Encounter' &&
@@ -119,11 +104,8 @@ tap.test('searchResources - Encounter', common.testWithRepo((t, repo) => {
             resource.class === outpatient
           )
         })
-        repo.searchResources('Encounter', {'subject:Patient': patientId, class: outpatient}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources} = await repo.searchResources('Encounter', {'subject:Patient': patientId, class: outpatient})
+        t.deepEqual(returnedResources, expectedResources)
       })
 
       t.end()

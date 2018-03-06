@@ -33,41 +33,35 @@ tap.test('searchResources - Condition', common.testWithRepo((t, repo) => {
       // Put the existing resources into expected order
       existingResources.reverse()
 
-      t.test('should return all conditions when no query parameters are specified', (t) => {
+      t.test('should return all conditions when no query parameters are specified', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Condition'
         })
-        repo.searchResources('Condition', {}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources, count} = await repo.searchResources('Condition', {})
+        t.deepEqual(returnedResources, expectedResources)
+        t.equal(count, 3)
       })
 
-      t.test('should return the correct conditions when searching by subject absolute reference', (t) => {
+      t.test('should return the correct conditions when searching by subject absolute reference', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Condition' &&
               resource.subject &&
               resource.subject.reference === `Patient/${patientId}`
         })
-        repo.searchResources('Condition', {subject: `Patient/${patientId}`}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources, count} = await repo.searchResources('Condition', {subject: `Patient/${patientId}`})
+        t.deepEqual(returnedResources, expectedResources)
+        t.equal(count, 2)
       })
 
-      t.test('should return the correct conditions when searching by subject id reference', (t) => {
+      t.test('should return the correct conditions when searching by subject id reference', async (t) => {
         const expectedResources = existingResources.filter((resource) => {
           return resource.resourceType === 'Condition' &&
             resource.subject &&
             resource.subject.reference === `Patient/${patientId}`
         })
-        repo.searchResources('Condition', {'subject:Patient': patientId}, (err, returnedResources) => {
-          t.error(err)
-          t.deepEqual(returnedResources, expectedResources)
-          t.end()
-        })
+        const {resources: returnedResources, count} = await repo.searchResources('Condition', {'subject:Patient': patientId})
+        t.deepEqual(returnedResources, expectedResources)
+        t.equal(count, 2)
       })
 
       t.end()

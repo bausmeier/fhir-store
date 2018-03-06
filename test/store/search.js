@@ -38,7 +38,7 @@ tap.test('Search', (t) => {
   const store = new Store({base: 'http://localhost/', repo})
 
   t.beforeEach((next) => {
-    repo.searchResources.yields(new Error('Not stubbed'))
+    repo.searchResources.rejects(new Error('Not stubbed'))
     sinon.stub(bundleCreator, 'createBundle').throws(new Error('Not stubbed'))
     next()
   })
@@ -52,7 +52,7 @@ tap.test('Search', (t) => {
   })
 
   t.test('should correctly construct bundle', (t) => {
-    repo.searchResources.withArgs('Patient', sinon.match({}), sinon.match.func).yields(null, [], 0)
+    repo.searchResources.withArgs('Patient', sinon.match({})).resolves({resources: [], count: 0})
 
     const expectedBundle = generateBundle()
 
@@ -71,7 +71,7 @@ tap.test('Search', (t) => {
       common.generatePatient(),
       common.generatePatient()
     ]
-    repo.searchResources.withArgs('Patient', sinon.match({}), sinon.match.func).yields(null, resources, resources.length)
+    repo.searchResources.withArgs('Patient', sinon.match({})).resolves({resources, count: 3})
 
     const expectedBundle = generateBundle(resources)
 
@@ -90,7 +90,7 @@ tap.test('Search', (t) => {
       page: 2,
       identifier: '16cd9ef0-e9a9-48a1-b015-b40923e17ddc'
     }
-    repo.searchResources.withArgs('Practitioner', sinon.match(query), sinon.match.func).yields(null, [], 0)
+    repo.searchResources.withArgs('Practitioner', sinon.match(query)).resolves({resources: [], count: 0})
 
     const expectedBundle = generateBundle()
 
@@ -106,7 +106,7 @@ tap.test('Search', (t) => {
   })
 
   t.test('should handle errors from repo', (t) => {
-    repo.searchResources.withArgs('Encounter', sinon.match({}), sinon.match.func).yields(new Error('boom'))
+    repo.searchResources.withArgs('Encounter', sinon.match({})).rejects(new Error('boom'))
 
     store.search('Encounter', (err) => {
       t.type(err, Error)
