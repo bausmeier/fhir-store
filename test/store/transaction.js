@@ -41,10 +41,9 @@ tap.test('Transaction', (t) => {
     repo
   })
 
-  t.beforeEach((next) => {
+  t.beforeEach(async () => {
     repo.updateResources.rejects(new Error('Not stubbed'))
     sinon.stub(bundleCreator, 'createBundle').rejects(new Error('Not stubbed'))
-    next()
   })
 
   t.afterEach((next) => {
@@ -55,21 +54,18 @@ tap.test('Transaction', (t) => {
     })
   })
 
-  t.test('should return an empty bundle when there are no entries in the transaction', (t) => {
+  t.test('should return an empty bundle when there are no entries in the transaction', async (t) => {
     const transaction = {entry: []}
 
     const expectedBundle = generateBundle()
 
     bundleCreator.createBundle.withArgs('http://localhost/', 'Transaction Results', sinon.match([])).returns(expectedBundle)
 
-    store.transaction(transaction, (err, bundle) => {
-      t.error(err)
-      t.deepEqual(bundle, expectedBundle)
-      t.end()
-    })
+    const bundle = await store.transaction(transaction)
+    t.deepEqual(bundle, expectedBundle)
   })
 
-  t.test('should return a validation error when there are entries without ids', (t) => {
+  t.test('should return a validation error when there are entries without ids', async (t) => {
     const transaction = {
       entry: [
         {
@@ -79,14 +75,16 @@ tap.test('Transaction', (t) => {
       ]
     }
 
-    store.transaction(transaction, (err) => {
+    try {
+      await store.transaction(transaction)
+      t.fail('transaction should have thrown')
+    } catch (err) {
       t.type(err, ValidationError)
       t.equal(err.message, 'Entries must have non-transient ids')
-      t.end()
-    })
+    }
   })
 
-  t.test('should return a validation error when there are entries with transient ids', (t) => {
+  t.test('should return a validation error when there are entries with transient ids', async (t) => {
     const transaction = {
       entry: [
         {
@@ -97,14 +95,16 @@ tap.test('Transaction', (t) => {
       ]
     }
 
-    store.transaction(transaction, (err) => {
+    try {
+      await store.transaction(transaction)
+      t.fail('transaction should have thrown')
+    } catch (err) {
       t.type(err, ValidationError)
       t.equal(err.message, 'Entries must have non-transient ids')
-      t.end()
-    })
+    }
   })
 
-  t.test('should return a validation error when there are entries with invalid an resource', (t) => {
+  t.test('should return a validation error when there are entries with invalid an resource', async (t) => {
     const transaction = {
       entry: [
         {
@@ -117,14 +117,16 @@ tap.test('Transaction', (t) => {
       ]
     }
 
-    store.transaction(transaction, (err) => {
+    try {
+      await store.transaction(transaction)
+      t.fail('transaction should have thrown')
+    } catch (err) {
       t.type(err, ValidationError)
       t.equal(err.message, 'Invalid resource in entry http://localhost/Patient/1')
-      t.end()
-    })
+    }
   })
 
-  t.test('should handle errors from repo', (t) => {
+  t.test('should handle errors from repo', async (t) => {
     const transaction = {
       entry: [
         {
@@ -140,14 +142,16 @@ tap.test('Transaction', (t) => {
 
     repo.updateResources.rejects(new Error('boom'))
 
-    store.transaction(transaction, (err) => {
+    try {
+      await store.transaction(transaction)
+      t.fail('transaction should have thrown')
+    } catch (err) {
       t.type(err, Error)
       t.equal(err.message, 'boom')
-      t.end()
-    })
+    }
   })
 
-  t.test('should return a resource bundle when the transaction is successful', (t) => {
+  t.test('should return a resource bundle when the transaction is successful', async (t) => {
     const resources = [
       {
         id: '1',
@@ -183,11 +187,8 @@ tap.test('Transaction', (t) => {
 
     bundleCreator.createBundle.withArgs('http://localhost/', 'Transaction Results', resources.map(sinon.match)).returns(expectedBundle)
 
-    store.transaction(transaction, (err, bundle) => {
-      t.error(err)
-      t.deepEqual(bundle, expectedBundle)
-      t.end()
-    })
+    const bundle = await store.transaction(transaction)
+    t.deepEqual(bundle, expectedBundle)
   })
 
   t.end()
