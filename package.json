@@ -11,7 +11,8 @@
   },
   "scripts": {
     "test": "tap --cov -bJ \"test/**/*.js\"",
-    "lint": "standard",
+    "lint":
+      "prettier -l \"{lib,test}/**/*.js\" \"*.json\" \".*.json\" \"*.md\"",
     "codecov": "tap --coverage-report=lcov && codecov"
   },
   "dependencies": {
@@ -21,8 +22,11 @@
   },
   "devDependencies": {
     "codecov": "^3.0.0",
+    "eslint": "^4.18.2",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "prettier": "^1.11.1",
     "sinon": "^4.3.0",
-    "standard": "^11.0.0",
     "tap": "^11.1.0"
   },
   "engines": {
