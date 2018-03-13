@@ -30,10 +30,21 @@ See [https://stripe.com/blog/idempotency](https://stripe.com/blog/idempotency).
 
 Transactions add a high level of complexity and are not strictly necessary in most cases. Dependencies between resources can be handled by creating or updating them in series via the API, and rollbacks can be performed using the update and delete interactions where necessary.
 
-## Recommended settings
+## Recommended setup
 
 ### MongoDB
+
+#### Options
 
 * Set the write concern to "majority" and enable journalling.
 * Set the read concern to "majority". This prevents dirty reads.
 * Set the read preference to "primaryPreferred". This allows reads to continue during failover.
+
+#### Indexes
+
+Indexes should be created based on the requirements of the implementation. This should take into account the queries which are likely to be performed and the expected read and write workloads.
+
+At a minimum there should be the following:
+
+* A unique compound index on `id` and `resourceType` for the `resources` collection to ensure that duplicate resources cannot be inserted.
+* Indexes on the `meta.lastUpdated` and `_id` fields for efficient sorting in the simple case.

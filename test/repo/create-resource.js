@@ -39,6 +39,15 @@ tap.test('createResource', common.testWithRepo(async (t, repo) => {
   t.test('should return a conflict error when the resource is a duplicate', async (t) => {
     const resource = common.generatePatient()
 
+    await repo._db.collection('resources').createIndex(
+      {
+        resourceType: 1,
+        id: 1
+      },
+      {
+        unique: true
+      }
+    )
     await repo._db.collection('resources').insertOne(resource)
 
     try {
