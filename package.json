@@ -15,7 +15,6 @@
     "codecov": "tap --coverage-report=lcov && codecov"
   },
   "dependencies": {
-    "fhir-errors": "^1.0.0",
     "mongodb": "^3.0.4",
     "uuid": "^3.1.0"
   },
@@ -30,5 +29,8 @@
   },
   "engines": {
     "node": ">= 7.6.0"
+  },
+  "peerDependencies": {
+    "fhir-errors": "^1.0.0"
   }
 }
