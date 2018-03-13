@@ -11,7 +11,7 @@ tap.test('getQueryBuilder', async (t) => {
   const db = sinon.createStubInstance(Db)
   client.db.returns(db)
 
-  const repo = new Repo(client, 'fhir-store-test')
+  const repo = new Repo({url: 'mongodb://localhost/fhir-store-test'})
 
   t.test('should return the correct query builder', async (t) => {
     const queryBuilder = repo.getQueryBuilder('Patient')
@@ -25,14 +25,14 @@ tap.test('setQueryBuilder', async (t) => {
   client.db.returns(db)
 
   t.test('should add new query builders', async (t) => {
-    const repo = new Repo(client, 'fhir-store-test')
+    const repo = new Repo({url: 'mongodb://localhost/fhir-store-test'})
     function customQueryBuilder () {}
     repo.setQueryBuilder('Custom', customQueryBuilder)
     t.equal(repo._builders.Custom, customQueryBuilder)
   })
 
   t.test('should replace existing query builders', async (t) => {
-    const repo = new Repo(client, 'fhir-store-test')
+    const repo = new Repo({url: 'mongodb://localhost/fhir-store-test'})
     function customPatientQueryBuilder () {}
     repo.setQueryBuilder('Patient', customPatientQueryBuilder)
     t.equal(repo._builders.Patient, customPatientQueryBuilder)

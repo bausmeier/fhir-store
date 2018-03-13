@@ -6,7 +6,7 @@ const {MongoClient, Db} = require('mongodb')
 
 tap.test('initialise repo', async t => {
   t.test('should set the correct internal fields', async t => {
-    const repo = new Repo({url: 'mongodb://localhost', name: 'fhir-store-test'})
+    const repo = new Repo({url: 'mongodb://localhost/fhir-store-test'})
     await repo.initialise()
     t.equal(repo._initialised, true)
     t.type(repo._client, MongoClient)
@@ -17,7 +17,7 @@ tap.test('initialise repo', async t => {
   })
 
   t.test('should return correct values for isInitialised', async t => {
-    const repo = new Repo({url: 'mongodb://localhost', name: 'fhir-store-test'})
+    const repo = new Repo({url: 'mongodb://localhost/fhir-store-test'})
 
     t.equal(repo.isInitialised(), false)
     await repo.initialise()
@@ -28,7 +28,7 @@ tap.test('initialise repo', async t => {
   })
 
   t.test('should throw if already initialised', async t => {
-    const repo = new Repo({url: 'mongodb://localhost', name: 'fhir-store-test'})
+    const repo = new Repo({url: 'mongodb://localhost/fhir-store-test'})
 
     await repo.initialise()
     try {

@@ -7,8 +7,7 @@ const tap = require('tap')
 const {MongoClient, ReadPreference} = require('mongodb')
 
 const REQUIRED_DB_OPTIONS = {
-  url: 'mongodb://localhost',
-  name: 'fhir-store-test'
+  url: 'mongodb://localhost/fhir-store-test'
 }
 
 tap.test('Connect', async (t) => {

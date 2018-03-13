@@ -12,8 +12,7 @@ const uuid = require('uuid/v1')
 exports.testWithRepo = (runTest) => {
   return async function (t) {
     const repo = new Repo({
-      url: 'mongodb://localhost',
-      name: 'fhir-store-test'
+      url: 'mongodb://localhost/fhir-store-test'
     })
 
     await repo.initialise()
