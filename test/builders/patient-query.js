@@ -4,7 +4,7 @@ const buildPatientQuery = require('../../lib/builders/patient-query')
 const tap = require('tap')
 
 tap.test('Patient query builder', async t => {
-  tap.test('should match on resource when there are no parameters', async t => {
+  t.test('should match on resource when there are no parameters', async t => {
     const expectedQuery = {
       resourceType: 'Patient'
     }
@@ -12,25 +12,22 @@ tap.test('Patient query builder', async t => {
     t.deepEqual(query, expectedQuery)
   })
 
-  tap.test(
-    'should add a filter for the identifier query parameter',
-    async t => {
-      const expectedQuery = {
-        resourceType: 'Patient',
-        identifier: {
-          $elemMatch: {
-            value: '123'
-          }
+  t.test('should add a filter for the identifier query parameter', async t => {
+    const expectedQuery = {
+      resourceType: 'Patient',
+      identifier: {
+        $elemMatch: {
+          value: '123'
         }
       }
-      const query = buildPatientQuery({
-        identifier: '123'
-      })
-      t.deepEqual(query, expectedQuery)
     }
-  )
+    const query = buildPatientQuery({
+      identifier: '123'
+    })
+    t.deepEqual(query, expectedQuery)
+  })
 
-  tap.test(
+  t.test(
     'should add a filter for the identifier query parameter with a namespace',
     async t => {
       const expectedQuery = {
@@ -49,7 +46,7 @@ tap.test('Patient query builder', async t => {
     }
   )
 
-  tap.test(
+  t.test(
     'should add filters for multiple identifier query parameters',
     async t => {
       const expectedQuery = {
@@ -78,7 +75,7 @@ tap.test('Patient query builder', async t => {
     }
   )
 
-  tap.test(
+  t.test(
     'should add filters for multiple identifier query parameters with a namespace',
     async t => {
       const expectedQuery = {
