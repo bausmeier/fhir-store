@@ -4,8 +4,8 @@ const common = require('../common')
 const tap = require('tap')
 const {createBundle} = require('../../lib/bundle')
 
-tap.test('Create', async (t) => {
-  t.test('should populate the standard fields', async (t) => {
+tap.test('Create', async t => {
+  t.test('should populate the standard fields', async t => {
     const expectedBundle = {
       resourceType: 'Bundle',
       title: 'Test Bundle',
@@ -23,18 +23,21 @@ tap.test('Create', async (t) => {
     t.match(bundle, expectedBundle)
   })
 
-  t.test('should return an empty bundle when there are no resources', async (t) => {
-    const expectedBundle = {
-      title: 'Empty Bundle',
-      totalResults: 0,
-      entry: []
+  t.test(
+    'should return an empty bundle when there are no resources',
+    async t => {
+      const expectedBundle = {
+        title: 'Empty Bundle',
+        totalResults: 0,
+        entry: []
+      }
+
+      const bundle = createBundle('http://localhost/', 'Empty Bundle', [])
+      t.match(bundle, expectedBundle)
     }
+  )
 
-    const bundle = createBundle('http://localhost/', 'Empty Bundle', [])
-    t.match(bundle, expectedBundle)
-  })
-
-  t.test('should allow the total results to be set', async (t) => {
+  t.test('should allow the total results to be set', async t => {
     const expectedBundle = {
       title: 'Empty Bundle',
       totalResults: 17,
@@ -45,7 +48,7 @@ tap.test('Create', async (t) => {
     t.match(bundle, expectedBundle)
   })
 
-  t.test('should contain bundle entries when there are resources', async (t) => {
+  t.test('should contain bundle entries when there are resources', async t => {
     const resources = [
       common.generatePatient(),
       common.generateEncounter(),
@@ -55,7 +58,7 @@ tap.test('Create', async (t) => {
     const expectedBundle = {
       title: 'Bundle with Resources',
       totalResults: 3,
-      entry: resources.map((resource) => {
+      entry: resources.map(resource => {
         return {
           title: `${resource.resourceType} Resource`,
           id: `http://localhost/${resource.resourceType}/${resource.id}`,
@@ -63,7 +66,9 @@ tap.test('Create', async (t) => {
           link: [
             {
               rel: 'self',
-              href: `http://localhost/${resource.resourceType}/${resource.id}/_history/${resource.meta.versionId}`
+              href: `http://localhost/${resource.resourceType}/${
+                resource.id
+              }/_history/${resource.meta.versionId}`
             }
           ],
           content: resource
@@ -71,7 +76,11 @@ tap.test('Create', async (t) => {
       })
     }
 
-    const bundle = createBundle('http://localhost/', 'Bundle with Resources', resources)
+    const bundle = createBundle(
+      'http://localhost/',
+      'Bundle with Resources',
+      resources
+    )
     t.match(bundle, expectedBundle)
   })
 })

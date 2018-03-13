@@ -6,7 +6,7 @@ const common = require('../common')
 const sinon = require('sinon')
 const tap = require('tap')
 
-tap.test('vread', async (t) => {
+tap.test('vread', async t => {
   const repo = sinon.createStubInstance(Repo)
   repo.isInitialised.returns(true)
 
@@ -19,14 +19,14 @@ tap.test('vread', async (t) => {
     repo.findResourceVersion.rejects(new Error('Not stubbed'))
   })
 
-  t.afterEach((next) => {
+  t.afterEach(next => {
     setTimeout(() => {
       repo.findResourceVersion.reset()
       next()
     })
   })
 
-  t.test('should call findResourceVersion and return the result', async (t) => {
+  t.test('should call findResourceVersion and return the result', async t => {
     const resource = common.generatePatient()
     repo.findResourceVersion.withArgs('Patient', '1', '9').resolves(resource)
 
@@ -34,7 +34,7 @@ tap.test('vread', async (t) => {
     t.deepEqual(result, resource)
   })
 
-  t.test('should handle errors from findResourceVersion', async (t) => {
+  t.test('should handle errors from findResourceVersion', async t => {
     repo.findResourceVersion.rejects(new Error('Oops'))
 
     try {

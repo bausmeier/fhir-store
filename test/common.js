@@ -9,8 +9,8 @@ if (require.main === module) {
 const Repo = require('../lib/repo')
 const uuid = require('uuid/v1')
 
-exports.testWithRepo = (runTest) => {
-  return async function (t) {
+exports.testWithRepo = runTest => {
+  return async function(t) {
     const repo = new Repo({
       url: 'mongodb://localhost/fhir-store-test'
     })
@@ -87,7 +87,7 @@ exports.generateDiagnosticReport = () => {
       ]
     },
     status: 'final',
-    issued: (new Date()).toJSON(),
+    issued: new Date().toJSON(),
     subject: {
       reference: `Patient/${uuid()}`
     }

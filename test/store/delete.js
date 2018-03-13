@@ -5,7 +5,7 @@ const Store = require('../../lib/store')
 const tap = require('tap')
 const sinon = require('sinon')
 
-tap.test('delete', async (t) => {
+tap.test('delete', async t => {
   const repo = sinon.createStubInstance(Repo)
   repo.isInitialised.returns(true)
 
@@ -18,21 +18,21 @@ tap.test('delete', async (t) => {
     repo.deleteResource.rejects(new Error('Not stubbed'))
   })
 
-  t.afterEach((next) => {
+  t.afterEach(next => {
     setTimeout(() => {
       repo.deleteResource.reset()
       next()
     })
   })
 
-  t.test('should call the repo delete with the correct parameters', async (t) => {
+  t.test('should call the repo delete with the correct parameters', async t => {
     repo.deleteResource.resolves(null)
     await store.delete('Patient', '1')
     t.equal(repo.deleteResource.callCount, 1)
     t.assert(repo.deleteResource.calledWith('Patient', '1'))
   })
 
-  t.test('should handle errors from the repo delete function', async (t) => {
+  t.test('should handle errors from the repo delete function', async t => {
     repo.deleteResource.withArgs('Encounter', '2').rejects(new Error('boom'))
     try {
       await store.delete('Encounter', '2')

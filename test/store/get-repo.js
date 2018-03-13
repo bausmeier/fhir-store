@@ -5,7 +5,7 @@ const Store = require('../../lib/store')
 const sinon = require('sinon')
 const tap = require('tap')
 
-tap.test('getRepo', async (t) => {
+tap.test('getRepo', async t => {
   const repo = sinon.createStubInstance(Repo)
   repo.isInitialised.returns(true)
 
@@ -14,7 +14,7 @@ tap.test('getRepo', async (t) => {
     repo
   })
 
-  t.test('should return the underlying repo', async (t) => {
+  t.test('should return the underlying repo', async t => {
     const returnedRepo = store.getRepo()
     t.equal(returnedRepo, repo)
   })

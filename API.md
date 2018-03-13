@@ -10,11 +10,11 @@ Initialises and returns an instance of Store.
 
 Options:
 
- - `db` (required) - The database connection options.
- - `db.url` - The database url to connect to.
- - `db.name` - The name of the database to use.
- - `dbOptions` - Options to pass to the database driver.
- - `base` - The FHIR base URL. Defaults to `http://localhost/`
+* `db` (required) - The database connection options.
+* `db.url` - The database url to connect to.
+* `db.name` - The name of the database to use.
+* `dbOptions` - Options to pass to the database driver.
+* `base` - The FHIR base URL. Defaults to `http://localhost/`
 
 The callback receives an error and an initialised Store instance.
 
@@ -42,8 +42,8 @@ Update a resource. Depending on the supplied options this will create the resour
 
 Options:
 
-- `ifMatch` - A specific version id to update. This enforces the update behaviour and will cause a conflict if the version of the resource being updated does not match. The special case of `*` matches any version.
-- `ifNoneMatch` - Only the special case of `*` is supported. This value enforces the create behaviour and will cause a conflict if the resource already exists.
+* `ifMatch` - A specific version id to update. This enforces the update behaviour and will cause a conflict if the version of the resource being updated does not match. The special case of `*` matches any version.
+* `ifNoneMatch` - Only the special case of `*` is supported. This value enforces the create behaviour and will cause a conflict if the resource already exists.
 
 The callback receives an error, the updated resource, and an info object which contains two boolean values `created` and `updated` to indicate the outcome of the update.
 
@@ -57,7 +57,7 @@ The callback receives an error argument.
 
 Search for all resources which match the provided query criteria.
 
-The `query` argument takes an object containing keys and values to use when searching for resources. The possible 
+The `query` argument takes an object containing keys and values to use when searching for resources. The possible
 entries depend on the type of resource. The `_count` and `page` entries apply to all resources and are used for paging.
 
 The callback receives an error and a resource bundle containing the search results as arguments.

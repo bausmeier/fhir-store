@@ -5,7 +5,7 @@ const Store = require('../../lib/store')
 const tap = require('tap')
 const sinon = require('sinon')
 
-tap.test('Close', async (t) => {
+tap.test('Close', async t => {
   const repo = sinon.createStubInstance(Repo)
   repo.isInitialised.returns(true)
 
@@ -18,14 +18,14 @@ tap.test('Close', async (t) => {
     repo.close.resolves()
   })
 
-  t.afterEach((next) => {
+  t.afterEach(next => {
     setTimeout(() => {
       repo.close.reset()
       next()
     })
   })
 
-  t.test('should call repo close function', async (t) => {
+  t.test('should call repo close function', async t => {
     await store.close()
     t.equal(repo.close.callCount, 1)
   })

@@ -10,8 +10,8 @@ const REQUIRED_DB_OPTIONS = {
   url: 'mongodb://localhost/fhir-store-test'
 }
 
-tap.test('Connect', async (t) => {
-  t.test('should pass through db url and name', async (t) => {
+tap.test('Connect', async t => {
+  t.test('should pass through db url and name', async t => {
     const options = {db: REQUIRED_DB_OPTIONS}
     const store = await FHIRStore.connect(options)
     t.type(store, Store)
@@ -21,7 +21,7 @@ tap.test('Connect', async (t) => {
     await store.close()
   })
 
-  t.test('should have a default base url', async (t) => {
+  t.test('should have a default base url', async t => {
     const options = {db: REQUIRED_DB_OPTIONS}
     const store = await FHIRStore.connect(options)
     t.type(store, Store)
@@ -31,7 +31,7 @@ tap.test('Connect', async (t) => {
     await store.close()
   })
 
-  t.test('should accept a base url option', async (t) => {
+  t.test('should accept a base url option', async t => {
     const options = {base: 'https://example.com/fhir/', db: REQUIRED_DB_OPTIONS}
     const store = await FHIRStore.connect(options)
     t.type(store, Store)
@@ -41,7 +41,7 @@ tap.test('Connect', async (t) => {
     await store.close()
   })
 
-  t.test('should pass db.options through to the database driver', async (t) => {
+  t.test('should pass db.options through to the database driver', async t => {
     sinon.spy(MongoClient, 'connect')
 
     const dbOptions = {
@@ -53,7 +53,9 @@ tap.test('Connect', async (t) => {
       readPreference: ReadPreference.PRIMARY_PREFERRED
     }
 
-    const options = {db: Object.assign({}, REQUIRED_DB_OPTIONS, {options: dbOptions})}
+    const options = {
+      db: Object.assign({}, REQUIRED_DB_OPTIONS, {options: dbOptions})
+    }
     const store = await FHIRStore.connect(options)
     t.equal(MongoClient.connect.callCount, 1)
     t.match(MongoClient.connect.firstCall.args[1], dbOptions)

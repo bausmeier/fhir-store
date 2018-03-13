@@ -11,8 +11,7 @@
   },
   "scripts": {
     "test": "tap --cov -bJ \"test/**/*.js\"",
-    "lint":
-      "prettier -l \"{lib,test}/**/*.js\" \"*.json\" \".*.json\" \"*.md\"",
+    "lint": "eslint \"{lib,test}/**/*.js\"",
     "codecov": "tap --coverage-report=lcov && codecov"
   },
   "dependencies": {

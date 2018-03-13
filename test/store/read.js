@@ -6,7 +6,7 @@ const common = require('../common')
 const sinon = require('sinon')
 const tap = require('tap')
 
-tap.test('read', async (t) => {
+tap.test('read', async t => {
   const repo = sinon.createStubInstance(Repo)
   repo.isInitialised.returns(true)
 
@@ -19,14 +19,14 @@ tap.test('read', async (t) => {
     repo.findResource.rejects(new Error('Not stubbed'))
   })
 
-  t.afterEach((next) => {
+  t.afterEach(next => {
     setTimeout(() => {
       repo.findResource.reset()
       next()
     })
   })
 
-  t.test('should call findResource and return the result', async (t) => {
+  t.test('should call findResource and return the result', async t => {
     const resource = common.generatePatient()
     repo.findResource.withArgs('Patient', '1').resolves(resource)
 
@@ -34,7 +34,7 @@ tap.test('read', async (t) => {
     t.deepEqual(result, resource)
   })
 
-  t.test('should handle errors from findResource', async (t) => {
+  t.test('should handle errors from findResource', async t => {
     repo.findResource.rejects(new Error('Oops'))
 
     try {
