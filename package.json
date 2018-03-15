@@ -18,6 +18,9 @@
     "mongodb": "^3.0.4",
     "uuid": "^3.1.0"
   },
+  "peerDependencies": {
+    "fhir-errors": "^1.0.0"
+  },
   "devDependencies": {
     "codecov": "^3.0.0",
     "eslint": "^4.18.2",
@@ -30,8 +33,5 @@
   },
   "engines": {
     "node": ">= 7.6.0"
-  },
-  "peerDependencies": {
-    "fhir-errors": "^1.0.0"
   }
 }
