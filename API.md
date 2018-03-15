@@ -4,19 +4,18 @@ This is the main module which is exported by the package.
 
 ## Functions
 
-### connect(options, callback)
+### connect(options)
 
-Initialises and returns an instance of Store.
+Initialises a new store instance.
 
 Options:
 
+* `base` - The FHIR base URL. Defaults to `http://localhost/`
 * `db` (required) - The database connection options.
 * `db.url` - The database url to connect to.
-* `db.name` - The name of the database to use.
-* `dbOptions` - Options to pass to the database driver.
-* `base` - The FHIR base URL. Defaults to `http://localhost/`
+* `db.options` - Options to pass to the database driver.
 
-The callback receives an error and an initialised Store instance.
+Returns a promise which gets resolved with the Store instance.
 
 # Store
 
@@ -24,19 +23,19 @@ This is the class which is used to perform FHIR interactions.
 
 ## FHIR interactions
 
-### read(resourceType, id, callback)
+### read(resourceType, id)
 
 Read a resource by its resource type and id.
 
-The callback receives an error and the resource as arguments.
+Returns a promise which gets resolved with the resource.
 
-### vread(resourceType, id, versionId, callback)
+### vread(resourceType, id, versionId)
 
 Read a resource by its resource type, id, and version id.
 
-The callback receives an error and the resource as arguments.
+Returns a promise which gets resolved with the resource.
 
-### update(resource,[ options,] callback)
+### update(resource[, options])
 
 Update a resource. Depending on the supplied options this will create the resource, update the resource, or return a conflict.
 
@@ -45,30 +44,35 @@ Options:
 * `ifMatch` - A specific version id to update. This enforces the update behaviour and will cause a conflict if the version of the resource being updated does not match. The special case of `*` matches any version.
 * `ifNoneMatch` - Only the special case of `*` is supported. This value enforces the create behaviour and will cause a conflict if the resource already exists.
 
-The callback receives an error, the updated resource, and an info object which contains two boolean values `created` and `updated` to indicate the outcome of the update.
+Returns a promise which gets resolved with an object containing:
 
-### delete(resourceType, id, callback)
+* `resource` - The updated resource.
+* `info` - An object containing additional information about the outcome of the update.
+* `info.created` - A boolean value to indicate that the resource was created.
+* `info.updated` - A boolean value to indicate that the resource was updated.
+
+### delete(resourceType, id)
 
 Delete a resource by its resource type and id.
 
-The callback receives an error argument.
+Returns a promise which gets resolved with no arguments.
 
-### search(resourceType,[ query,] callback)
+### search(resourceType[, query])
 
 Search for all resources which match the provided query criteria.
 
 The `query` argument takes an object containing keys and values to use when searching for resources. The possible
 entries depend on the type of resource. The `_count` and `page` entries apply to all resources and are used for paging.
 
-The callback receives an error and a resource bundle containing the search results as arguments.
+Returns a promise which gets resolved with a resource bundle containing the search results.
 
-### transaction(bundle, callback)
+### transaction(bundle)
 
 Update multiple resources in a single batch.
 
 This funciton is not ACID compliant. The updates should therefore be idempotent so that the transaction can be retried in case of a failure.
 
-The callback receives an error and a bundle containing the updated resources as arguments.
+Returns a promise which gets resolved with a resource bundle containing the updated resources.
 
 ## Other functions
 
@@ -79,6 +83,8 @@ Synchronously get the Repo instance underlying the store.
 ### close()
 
 Close the store and its underlying connections.
+
+Returns a promise which gets resolved with no arguments.
 
 # Repo
 
