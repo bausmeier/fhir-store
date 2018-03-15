@@ -4,6 +4,7 @@
 !.npmignore
 !.prettierrc.json
 !.travis.yml
+*.log
 /node_modules/
 /coverage/
 /out/
