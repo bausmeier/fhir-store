@@ -28,7 +28,7 @@
     "eslint-plugin-prettier": "2.6.0",
     "fhir-errors": "1.0.0",
     "prettier": "1.11.1",
-    "sinon": "4.4.6",
+    "sinon": "4.5.0",
     "tap": "11.1.2"
   },
   "engines": {
