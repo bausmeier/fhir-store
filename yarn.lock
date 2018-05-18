@@ -1676,7 +1676,7 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
-nyc@^11.7.2:
+nyc@^11.8.0:
   version "11.8.0"
   resolved "https://registry.yarnpkg.com/nyc/-/nyc-11.8.0.tgz#1e8453b0644f8fea4d829b1a6636663157cd3b00"
   dependencies:
@@ -2204,7 +2204,7 @@ source-map-resolve@^0.5.0:
     source-map-url "^0.4.0"
     urix "^0.1.0"
 
-source-map-support@^0.5.5:
+source-map-support@^0.5.6:
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.6.tgz#4435cee46b1aab62b8e8610ce60f788091c51c13"
   dependencies:
@@ -2403,9 +2403,9 @@ tap-parser@^7.0.0:
     js-yaml "^3.2.7"
     minipass "^2.2.0"
 
-tap@11.1.5:
-  version "11.1.5"
-  resolved "https://registry.yarnpkg.com/tap/-/tap-11.1.5.tgz#31bbef84c7a2ca78b2f811edf5fabd336c0ec846"
+tap@12.0.1:
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/tap/-/tap-12.0.1.tgz#748f103d3ae84dce21e555b7112ec5a19adeb6d0"
   dependencies:
     bind-obj-methods "^2.0.0"
     bluebird "^3.5.1"
@@ -2420,20 +2420,20 @@ tap@11.1.5:
     js-yaml "^3.11.0"
     minipass "^2.3.0"
     mkdirp "^0.5.1"
-    nyc "^11.7.2"
+    nyc "^11.8.0"
     opener "^1.4.1"
     os-homedir "^1.0.2"
     own-or "^1.0.0"
     own-or-env "^1.0.1"
     rimraf "^2.6.2"
     signal-exit "^3.0.0"
-    source-map-support "^0.5.5"
+    source-map-support "^0.5.6"
     stack-utils "^1.0.0"
     tap-mocha-reporter "^3.0.7"
     tap-parser "^7.0.0"
-    tmatch "^3.1.0"
+    tmatch "^4.0.0"
     trivial-deferred "^1.0.1"
-    tsame "^1.1.2"
+    tsame "^2.0.0"
     write-file-atomic "^2.3.0"
     yapool "^1.0.0"
 
@@ -2459,9 +2459,9 @@ through@^2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-tmatch@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/tmatch/-/tmatch-3.1.0.tgz#701264fd7582d0144a80c85af3358cca269c71e3"
+tmatch@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/tmatch/-/tmatch-4.0.0.tgz#ba178007f30bf6a70f37c643fca5045fb2f8c448"
 
 tmp@^0.0.33:
   version "0.0.33"
@@ -2509,9 +2509,9 @@ trivial-deferred@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trivial-deferred/-/trivial-deferred-1.0.1.tgz#376d4d29d951d6368a6f7a0ae85c2f4d5e0658f3"
 
-tsame@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/tsame/-/tsame-1.1.2.tgz#5ce0002acf685942789c63018797a2aa5e6b03c5"
+tsame@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/tsame/-/tsame-2.0.0.tgz#4923c805cbd789775eca33b9d0c67b358a7d86a8"
 
 tunnel-agent@^0.6.0:
   version "0.6.0"
